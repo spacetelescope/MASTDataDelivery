@@ -1,0 +1,54 @@
+======================
+Input
+======================
+mission = A string or array of strings containing the mission ID, e.g., "kepler", "hst", et.  The number of "mission" strings must equal the number of "observation_ids", or else an error will be raised.
+
+observation_id = A string or array of strings containing the observationID from the MAST Discovery Portal.  The number of "observation_id" strings must equal the number of "mission" strings, or else an error will be raised.
+
+<optional keyword> test = If "test" is set to True, the software will test for file existence and the ability to read in each data file for the given observation ID, but will only return the error flag for each observation ID.
+
+======================
+Output
+======================
+A single JSON object, containing one or more additional JSON objects, is returned.  The JSON objects inside the returned structure will be referred to as DataSeries objects.  The number of returned DataSeries will be equal to the number of requested Mission/ObservationIDs.  The number of requested Mission/ObservationIDs will be referred to as "n_data_series".  Note that if the optional input parameter "test" is set to True, then the return value will be a JSON object containing a set of "n_data_series" integers corresponding to the error flag that is normally returned as part of a DataSeries object.
+
+return_val = { {DataSeries1}, {DataSeries2}, {DataSeries3}, ..., {DataSeries(n_data_series)} }
+
+or
+
+return_val = { 0, 0, 1, ..., 0} <if TEST=True>
+
+======================
+DataSeries Definition
+======================
+{
+	observationID: The observation ID for this DataSeries, from input. <scalar string>
+
+	mission: The mission string for this DataSeries, from input. <scalar string>
+
+	plot_series: One dimensional array containing one or more one-dimensional arrays.  Each of the arrays inside "plot_series" is a complete set of (x-y) pairs to use for that particular plot series within this DataSeries.
+
+	plot_labels: One dimensional array of strings containing the label to use for each plot series within this DataSeries.  The number of "plot_labels" must equal the number of plot series.
+}
+
+======================
+Example DataSeries Object: Kepler
+(Note: x1, x2, xl, xm, etc. are relative and do not represent the same element between JSON objects.)
+======================
+{
+	observationID: "kplr012644769_sc_Q001000000033333322"
+	mission: "kepler"
+	plot_series: { 
+		       {(x1,y1), (x2,y2), ..., (xl,yl)},
+		       {(x1,y1), (x2,y2), ..., (xm,ym)},
+		       {(x1,y1), (x2,y2), ..., (xn,yn)}, 
+		       ...
+		     }
+	plot_labels: { 
+		       "SC - Q02A",
+		       "SC - Q10a",
+		       "SC - Q10b",
+		       "SC - Q10c",
+		       ...
+		     }
+}
