@@ -12,11 +12,13 @@ Output
 ======================
 A single JSON object, containing one or more additional JSON objects, is returned.  The JSON objects inside the returned structure will be referred to as DataSeries objects.  The number of returned DataSeries will be equal to the number of requested Mission/ObservationIDs.  The number of requested Mission/ObservationIDs will be referred to as "n_data_series".  Note that if the optional input parameter "test" is set to True, then the return value will be a JSON object containing a set of "n_data_series" integers corresponding to the error flag that is normally returned as part of a DataSeries object.
 
-return_val = { {DataSeries1}, {DataSeries2}, {DataSeries3}, ..., {DataSeries(n_data_series)} }
+return_val = {
+	series: [DataSeries1, DataSeries2, DataSeries3, ..., DataSeries(n_data_series)]
+}
 
 or
 
-return_val = { 0, 0, 1, ..., 0} <if TEST=True>
+return_val = [0, 0, 1, ..., 0] <if TEST=True>
 
 ======================
 DataSeries Definition
@@ -38,17 +40,17 @@ Example DataSeries Object: Kepler
 {
 	observationID: "kplr012644769_sc_Q001000000033333322"
 	mission: "kepler"
-	plot_series: { 
-		       {(x1,y1), (x2,y2), ..., (xl,yl)},
-		       {(x1,y1), (x2,y2), ..., (xm,ym)},
-		       {(x1,y1), (x2,y2), ..., (xn,yn)}, 
+	plot_series: [ 
+		       [(x1,y1), (x2,y2), ..., (xl,yl)],
+		       [(x1,y1), (x2,y2), ..., (xm,ym)],
+		       [(x1,y1), (x2,y2), ..., (xn,yn)], 
 		       ...
-		     }
-	plot_labels: { 
+		     ]
+	plot_labels: [ 
 		       "SC - Q02A",
 		       "SC - Q10a",
 		       "SC - Q10b",
 		       "SC - Q10c",
 		       ...
-		     }
+		     ]
 }
