@@ -1,12 +1,18 @@
+"""
+.. module:: data_series
+
+   :synopsis: Defines the DataSeries class.
+
+.. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
+"""
 
 #--------------------
-
 class DataSeries(object):
     """
-    Defines a Data Series object, which contains the data (plot series) and 
+    Defines a Data Series object, which contains the data (plot series) and
     plot labels for those series.
     """
-    
+
     def __init__(self, mission, obsid, plot_series, plot_labels, errcode):
         """
         Create a DataSeries object.
@@ -19,12 +25,12 @@ class DataSeries(object):
 
         :type obsid: str
 
-        :param plot_series: A 1-D list containing one or more 1-D lists that 
+        :param plot_series: A 1-D list containing one or more 1-D lists that
         contain the (x,y) pairs for the given series of data.
 
         :type plot_series: list
 
-        :param plot_labels: A 1-D list containing the strings to use as plot 
+        :param plot_labels: A 1-D list containing the strings to use as plot
         labels for each of the series of data.
 
         :type plot_series: list
@@ -40,5 +46,4 @@ class DataSeries(object):
         self.plot_series = plot_series
         self.plot_labels = plot_labels
         self.errcode = errcode
-
 #--------------------
