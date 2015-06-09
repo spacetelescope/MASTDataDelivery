@@ -112,8 +112,9 @@ def parse_obsid_kepler(obsid):
     """ Use the Q code to get paths to each file. """
     all_files = []
     all_quarters = []
-    dir_root = (os.path.pardir + os.path.sep + "missions" + os.path.sep + 
-                "kepler"+os.path.sep + "lightcurves" + os.path.sep)
+    dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
+                "missions" + os.path.sep + "kepler" + os.path.sep +
+                "lightcurves" + os.path.sep)
     star_dir_root = kepid[0:4] + os.path.sep + kepid + os.path.sep
 
     """ Populate long cadence files if the cadence type is LC. """

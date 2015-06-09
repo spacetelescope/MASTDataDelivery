@@ -35,6 +35,14 @@ def deliver_data(missions, obsids):
     if len(missions) != len(obsids):
         raise IOError("Number of 'missions' must equal the number of 'obsids'.")
 
+    """ Make sure the input data are sorted based on the obsids, so that the"
+    " input is order-independent. """
+    sort_indexes = sorted(range(len([x+'-'+y for x,y in zip(missions,obsids)])),
+                          key=lambda k: [x+'-'+y for x,y in 
+                                         zip(missions,obsids)][k])
+    missions = [missions[x] for x in sort_indexes]
+    obsids = [obsids[x] for x in sort_indexes]
+
     """ Each mission+obsID pair will have a DataSeries object returned, so make
     a list to store them all in. """
     all_data_series = []
