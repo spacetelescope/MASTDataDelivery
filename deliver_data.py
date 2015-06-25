@@ -50,7 +50,7 @@ def deliver_data(missions, obsids):
                           lambda k: [x+'-'+y for x, y in
                                      zip(missions, obsids)][k])
     missions = [missions[x] for x in sort_indexes]
-    obsids = [obsids[x] for x in sort_indexes]
+    obsids = [obsids[x].lower() for x in sort_indexes]
 
     # Each mission + obsID pair will have a DataSeries object returned, so make
     # a list to store them all in.
@@ -118,5 +118,4 @@ if __name__ == "__main__":
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
-
 #--------------------

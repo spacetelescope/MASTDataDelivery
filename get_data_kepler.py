@@ -37,6 +37,10 @@ def get_data_kepler(obsid):
     # This defines a data point for a DataSeries object as a namedtuple.
     data_point = collections.namedtuple('DataPoint', ['x', 'y'])
 
+    # For Kepler, this defines the x-axis and y-axis units as a string.
+    kepler_xunit = "BJD"
+    kepler_yunit = "electrons / second"
+
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
     parsed_files_result = parse_obsid_kepler(obsid)
@@ -45,6 +49,8 @@ def get_data_kepler(obsid):
         # For each file, read in the contents and create a return JSON object.
         all_plot_labels = ['']*2*len(parsed_files_result.files)
         all_plot_series = ['']*2*len(parsed_files_result.files)
+        all_plot_xunits = ['']*2*len(parsed_files_result.files)
+        all_plot_yunits = ['']*2*len(parsed_files_result.files)
 
         # This error code will be used unless there's a problem reading any of
         #the FITS files in the list.
@@ -70,23 +76,35 @@ def get_data_kepler(obsid):
                     all_plot_labels[i*2] = this_plot_label + ' SAP'
                     all_plot_series[i*2] = [data_point(x=x, y=y) for x, y in
                                             zip(bjd, flux_sap)]
+                    all_plot_xunits[i*2] = kepler_xunit
+                    all_plot_yunits[i*2] = kepler_yunit
+                    
                     all_plot_labels[i*2+1] = this_plot_label + ' PDCSAP'
                     all_plot_series[i*2+1] = [data_point(x=x, y=y) for x, y in
                                               zip(bjd, flux_pdcsap)]
+                    all_plot_xunits[i*2+1] = kepler_xunit
+                    all_plot_yunits[i*2+1] = kepler_yunit
+
             except IOError:
                 errcode = 6
                 all_plot_labels[i*2] = ''
                 all_plot_series[i*2] = []
+                all_plot_xunits[i*2] = ''
+                all_plot_yunits[i*2] = ''
                 all_plot_labels[i*2+1] = ''
                 all_plot_series[i*2+1] = []
+                all_plot_xunits[i*2+1] = ''
+                all_plot_yunits[i*2+1] = ''
+
 
         # Create the return DataSeries object.
         return_dataseries = DataSeries('kepler', obsid, all_plot_series,
                                        all_plot_labels,
+                                       all_plot_xunits, all_plot_yunits,
                                        errcode)
     else:
         # This is where an error DataSeries object would be returned.
-        return_dataseries = DataSeries('kepler', obsid, [], [],
+        return_dataseries = DataSeries('kepler', obsid, [], [], [], [],
                                        parsed_files_result.errcode)
 
     # Return the DataSeries object back to the calling module.
