@@ -136,12 +136,12 @@ def parse_obsid_kepler(obsid):
     # Populate long cadence files if the cadence type is LC.
     if cadence == 'lc':
         for i, q_c in enumerate(qcode):
-            files_to_add = [dir_root + star_dir_root +
-                              'kplr' + kepid + '-' + x +
-                              '_llc.fits' for x in
-                              LONG_QUARTER_PREFIXES[str(i)] if
-                            os.path.isfile(dir_root + star_dir_root + 'kplr'
-                                           + kepid + '-' + x + '_llc.fits')]
+            files_to_add = [
+                dir_root + star_dir_root + 'kplr' + kepid + '-' + x +
+                '_llc.fits' for x in LONG_QUARTER_PREFIXES[str(i)] if
+                os.path.isfile(
+                    dir_root + star_dir_root + 'kplr'
+                    + kepid + '-' + x + '_llc.fits')]
             if len(files_to_add) == int(q_c):
                 all_files.extend(files_to_add)
                 all_quarters.extend([str('{0:02d}'.format(i))] *
@@ -155,18 +155,17 @@ def parse_obsid_kepler(obsid):
     # Populate long cadence files if the cadence type is SC.
     if cadence == 'sc':
         for i, q_c in enumerate(qcode):
-            files_to_add = [dir_root + star_dir_root +
-                              'kplr' + kepid + '-' + x +
-                              '_slc.fits' for x in
-                              SHORT_QUARTER_PREFIXES[str(i)] if
-                            os.path.isfile(dir_root + star_dir_root + 'kplr'
-                                           + kepid + '-' + x + '_slc.fits')]
+            files_to_add = [
+                dir_root + star_dir_root + 'kplr' + kepid + '-' + x +
+                '_slc.fits' for x in SHORT_QUARTER_PREFIXES[str(i)] if
+                os.path.isfile(
+                    dir_root + star_dir_root + 'kplr'
+                    + kepid + '-' + x + '_slc.fits')]
             if len(files_to_add) == int(q_c):
                 all_files.extend(files_to_add)
                 all_quarters.extend([''.join(x) for x in
                                      zip([str('{0:02d}'.format(i))] *
-                                         len(files_to_add), QUARTER_LETTERS)
-                                     ])
+                                         len(files_to_add), QUARTER_LETTERS)])
             else:
                 error_code = 5
                 return parsed_values(kepid=kepid, cadence=cadence,
