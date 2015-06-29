@@ -9,6 +9,7 @@
 
 import argparse
 from get_data_kepler import get_data_kepler
+from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 import json
 
 #--------------------
@@ -59,6 +60,8 @@ def deliver_data(missions, obsids):
     for mission, obsid in zip(missions, obsids):
         if mission == 'kepler':
             this_data_series = get_data_kepler(obsid)
+        if mission == "hlsp_k2varcat":
+            this_data_series = get_data_hlsp_k2varcat(obsid)
         else:
             # This is where other mission-specific modules will go.
             pass
@@ -88,10 +91,11 @@ def setup_args():
                                  'euve',
                                  'fuse',
                                  'galex',
+                                 'hlsp_k2sff',
+                                 'hlsp_k2varcat',
                                  'hst',
                                  'hut',
                                  'iue',
-                                 'k2',
                                  'kepler',
                                  'tues',
                                  'wuppe'],
