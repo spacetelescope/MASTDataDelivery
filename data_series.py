@@ -13,7 +13,8 @@ class DataSeries(object):
     plot labels for those series.
     """
 
-    def __init__(self, mission, obsid, plot_series, plot_labels, errcode):
+    def __init__(self, mission, obsid, plot_series, plot_labels,
+                 xunits, yunits, errcode):
         """
         Create a DataSeries object.
 
@@ -35,15 +36,26 @@ class DataSeries(object):
 
         :type plot_series: list
 
+        :param xunits: A 1-D list containing the strings to use as x-axis unit
+        labels for each of the series of data.
+
+        :type xunits: list
+
+        :param yunits: A 1-D list containing the strings to use as y-axis unit
+        labels for each of the series of data.
+
+        :type yunits: list
+
         :param errcode: An integer used to signal if there was a problem reading
         in the data.
 
         :type errcode: int
-
         """
         self.mission = mission
         self.obsid = obsid
         self.plot_series = plot_series
         self.plot_labels = plot_labels
+        self.xunits = xunits
+        self.yunits = yunits
         self.errcode = errcode
 #--------------------

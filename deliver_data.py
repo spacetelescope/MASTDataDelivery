@@ -8,6 +8,8 @@
 """
 
 import argparse
+from get_data_hlsp_k2sff import get_data_hlsp_k2sff
+from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_kepler import get_data_kepler
 import json
 
@@ -50,13 +52,17 @@ def deliver_data(missions, obsids):
                           lambda k: [x+'-'+y for x, y in
                                      zip(missions, obsids)][k])
     missions = [missions[x] for x in sort_indexes]
-    obsids = [obsids[x] for x in sort_indexes]
+    obsids = [obsids[x].lower() for x in sort_indexes]
 
     # Each mission + obsID pair will have a DataSeries object returned, so make
     # a list to store them all in.
     all_data_series = []
 
     for mission, obsid in zip(missions, obsids):
+        if mission == "hlsp_k2sff":
+            this_data_series = get_data_hlsp_k2sff(obsid)
+        if mission == "hlsp_k2varcat":
+            this_data_series = get_data_hlsp_k2varcat(obsid)
         if mission == 'kepler':
             this_data_series = get_data_kepler(obsid)
         else:
@@ -88,10 +94,11 @@ def setup_args():
                                  'euve',
                                  'fuse',
                                  'galex',
+                                 'hlsp_k2sff',
+                                 'hlsp_k2varcat',
                                  'hst',
                                  'hut',
                                  'iue',
-                                 'k2',
                                  'kepler',
                                  'tues',
                                  'wuppe'],
@@ -118,5 +125,4 @@ if __name__ == "__main__":
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
-
 #--------------------
