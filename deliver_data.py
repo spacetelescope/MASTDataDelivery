@@ -8,8 +8,9 @@
 """
 
 import argparse
-from get_data_kepler import get_data_kepler
+from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
+from get_data_kepler import get_data_kepler
 import json
 
 #--------------------
@@ -58,10 +59,12 @@ def deliver_data(missions, obsids):
     all_data_series = []
 
     for mission, obsid in zip(missions, obsids):
-        if mission == 'kepler':
-            this_data_series = get_data_kepler(obsid)
+        if mission == "hlsp_k2sff":
+            this_data_series = get_data_hlsp_k2sff(obsid)
         if mission == "hlsp_k2varcat":
             this_data_series = get_data_hlsp_k2varcat(obsid)
+        if mission == 'kepler':
+            this_data_series = get_data_kepler(obsid)
         else:
             # This is where other mission-specific modules will go.
             pass
