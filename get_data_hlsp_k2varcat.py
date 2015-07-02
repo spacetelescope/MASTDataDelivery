@@ -24,10 +24,12 @@ def get_data_hlsp_k2varcat(obsid):
     :returns: JSON -- The lightcurve data for this observation ID.
 
     Error codes:
+    From parse_obsid_hlsp_k2varcat:
     0 = No error.
     1 = Error parsing K2VARCAT observation ID.
     2 = Cadence not recognized as long cadence.
     3 = File is missing on disk.
+    From this module:
     4 = BJD reference date not expected value.
     5 = Could not open FITS file for reading.
     """

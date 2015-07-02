@@ -53,7 +53,7 @@ def get_data_kepler(obsid):
         all_plot_yunits = ['']*2*len(parsed_files_result.files)
 
         # This error code will be used unless there's a problem reading any of
-        #the FITS files in the list.
+        # the FITS files in the list.
         errcode = 0
         for i, kfile in enumerate(parsed_files_result.files):
             try:
