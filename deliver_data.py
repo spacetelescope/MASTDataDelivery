@@ -14,6 +14,9 @@ from get_data_iue import get_data_iue
 from get_data_kepler import get_data_kepler
 import json
 
+from mpl_get_data_fuse import mpl_get_data_fuse
+from mpl_get_data_galex import mpl_get_data_galex
+
 #--------------------
 def json_encoder(obj):
     """
@@ -64,6 +67,10 @@ def deliver_data(missions, obsids):
             this_data_series = get_data_hlsp_k2sff(obsid)
         if mission == "hlsp_k2varcat":
             this_data_series = get_data_hlsp_k2varcat(obsid)
+        if mission == "fuse":
+            this_data_series = mpl_get_data_fuse(obsid)
+        if mission == "galex":
+            this_data_series = mpl_get_data_galex(obsid)
         if mission == "iue":
             this_data_series = get_data_iue(obsid)
         if mission == 'kepler':
