@@ -23,10 +23,12 @@ def get_data_hlsp_k2sff(obsid):
     :returns: JSON -- The lightcurve data for this observation ID.
 
     Error codes:
+    From parse_obsid_hlsp_k2sff:
     0 = No error.
     1 = Error parsing K2SFF observation ID.
     2 = Cadence not recognized as long cadence.
     3 = File is missing on disk.
+    From this module:
     4 = FITS file does not have the expected number of FITS extensions.
     5 = Could not open FITS file for reading.
     """
