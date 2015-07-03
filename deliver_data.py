@@ -18,6 +18,7 @@ from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
 from mpl_get_data_fuse import mpl_get_data_fuse
 from mpl_get_data_galex import mpl_get_data_galex
+from mpl_get_data_hst import mpl_get_data_hst
 from mpl_get_data_hut import mpl_get_data_hut
 from mpl_get_data_tues import mpl_get_data_tues
 from mpl_get_data_wuppe import mpl_get_data_wuppe
@@ -80,6 +81,8 @@ def deliver_data(missions, obsids):
             this_data_series = mpl_get_data_fuse(obsid)
         if mission == "galex":
             this_data_series = mpl_get_data_galex(obsid)
+        if mission == "hst":
+            this_data_series = mpl_get_data_hst(obsid)
         if mission == "hut":
             this_data_series = mpl_get_data_hut(obsid)
         if mission == "iue":
