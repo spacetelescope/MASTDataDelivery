@@ -14,10 +14,12 @@ from get_data_iue import get_data_iue
 from get_data_kepler import get_data_kepler
 import json
 
+from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
 from mpl_get_data_fuse import mpl_get_data_fuse
 from mpl_get_data_galex import mpl_get_data_galex
 from mpl_get_data_hut import mpl_get_data_hut
+from mpl_get_data_tues import mpl_get_data_tues
 from mpl_get_data_wuppe import mpl_get_data_wuppe
 
 #--------------------
@@ -66,6 +68,8 @@ def deliver_data(missions, obsids):
     all_data_series = []
 
     for mission, obsid in zip(missions, obsids):
+        if mission == "befs":
+            this_data_series = mpl_get_data_befs(obsid)
         if mission == "euve":
             this_data_series = mpl_get_data_euve(obsid)
         if mission == "hlsp_k2sff":
@@ -82,6 +86,8 @@ def deliver_data(missions, obsids):
             this_data_series = get_data_iue(obsid)
         if mission == 'kepler':
             this_data_series = get_data_kepler(obsid)
+        if mission == "tues":
+            this_data_series = mpl_get_data_tues(obsid)
         if mission == "wuppe":
             this_data_series = mpl_get_data_wuppe(obsid)
 

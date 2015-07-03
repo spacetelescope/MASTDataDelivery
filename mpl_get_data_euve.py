@@ -63,7 +63,7 @@ def mpl_get_data_euve(obsid):
 
         # Create the return DataSeries object.
         return_dataseries = DataSeries('euve', obsid, plot_series,
-                                       ['EUVE_' + obsid[3:]],
+                                       ['EUVE_' + obsid],
                                        [euve_xunit], [euve_yunit], errcode)
     else:
         errcode = 1

@@ -1,7 +1,7 @@
 """
-.. module:: mpl_get_data_wuppe
+.. module:: mpl_get_data_tues
 
-   :synopsis: Returns WUPPE spectral data as a JSON string through Randy's
+   :synopsis: Returns TUES spectral data as a JSON string through Randy's
    mast_plot.pl service.
 
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
@@ -13,11 +13,11 @@ from operator import itemgetter
 import requests
 
 #--------------------
-def mpl_get_data_wuppe(obsid):
+def mpl_get_data_tues(obsid):
     """
-    Given a WUPPE observation ID, returns the spectral data.
+    Given a TUES observation ID, returns the spectral data.
 
-    :param obsid: The WUPPE observation ID to retrieve the data from.
+    :param obsid: The TUES observation ID to retrieve the data from.
 
     :type obsid: str
 
@@ -31,14 +31,14 @@ def mpl_get_data_wuppe(obsid):
     # This defines a data point for a DataSeries object as a namedtuple.
     data_point = collections.namedtuple('DataPoint', ['x', 'y'])
 
-    # For WUPPE, this defines the x-axis and y-axis units as a string.
-    wuppe_xunit = "Angstroms"
-    wuppe_yunit = "ergs/cm^2/s/Angstrom"
+    # For TUES, this defines the x-axis and y-axis units as a string.
+    tues_xunit = "Angstroms"
+    tues_yunit = "ergs/cm^2/s/Angstrom"
 
     # Initiate a reqest from Randy's perl script service.  Note the return is
     # a 3-element list, each element itself if a list containing another list.
     return_request = requests.get("https://archive.stsci.edu/cgi-bin/mast_plot"
-                                  ".pl?WUPPE=" + obsid.lower()).json()
+                                  ".pl?TUES=" + obsid).json()
 
     if len(return_request[0][0]) != 1:
         # Wavelengths are the first list in the returned 3-element list.
@@ -62,13 +62,13 @@ def mpl_get_data_wuppe(obsid):
         plot_series = [data_point(x=x, y=y) for x, y in wlfls]
 
         # Create the return DataSeries object.
-        return_dataseries = DataSeries('wuppe', obsid, plot_series,
-                                       ['WUPPE_' + obsid],
-                                       [wuppe_xunit], [wuppe_yunit], errcode)
+        return_dataseries = DataSeries('tues', obsid, plot_series,
+                                       ['TUES_' + obsid[4:]],
+                                       [tues_xunit], [tues_yunit], errcode)
     else:
         errcode = 1
         # Otherwise there was likely a problem: file missing on disk, etc.
-        return_dataseries = DataSeries('wuppe', obsid, [], [], [], [], errcode)
+        return_dataseries = DataSeries('tues', obsid, [], [], [], [], errcode)
 
     # Return the DataSeries object back to the calling module.
     return return_dataseries
