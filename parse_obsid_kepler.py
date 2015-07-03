@@ -100,7 +100,7 @@ def parse_obsid_kepler(obsid):
 
     # Split the observation ID into Kepler star name, cadence, and Q code.
     try:
-        kepid, cadence, qcode = [x for x in re.split('_|kplr|q', obsid) if
+        kepid, cadence, qcode = [x for x in re.split('_|kplr|Q', obsid) if
                                  x != '']
     except ValueError:
         error_code = 1

@@ -14,8 +14,11 @@ from get_data_iue import get_data_iue
 from get_data_kepler import get_data_kepler
 import json
 
+from mpl_get_data_euve import mpl_get_data_euve
 from mpl_get_data_fuse import mpl_get_data_fuse
 from mpl_get_data_galex import mpl_get_data_galex
+from mpl_get_data_hut import mpl_get_data_hut
+from mpl_get_data_wuppe import mpl_get_data_wuppe
 
 #--------------------
 def json_encoder(obj):
@@ -56,13 +59,15 @@ def deliver_data(missions, obsids):
                           lambda k: [x+'-'+y for x, y in
                                      zip(missions, obsids)][k])
     missions = [missions[x] for x in sort_indexes]
-    obsids = [obsids[x].lower() for x in sort_indexes]
+    obsids = [obsids[x] for x in sort_indexes]
 
     # Each mission + obsID pair will have a DataSeries object returned, so make
     # a list to store them all in.
     all_data_series = []
 
     for mission, obsid in zip(missions, obsids):
+        if mission == "euve":
+            this_data_series = mpl_get_data_euve(obsid)
         if mission == "hlsp_k2sff":
             this_data_series = get_data_hlsp_k2sff(obsid)
         if mission == "hlsp_k2varcat":
@@ -71,13 +76,14 @@ def deliver_data(missions, obsids):
             this_data_series = mpl_get_data_fuse(obsid)
         if mission == "galex":
             this_data_series = mpl_get_data_galex(obsid)
+        if mission == "hut":
+            this_data_series = mpl_get_data_hut(obsid)
         if mission == "iue":
             this_data_series = get_data_iue(obsid)
         if mission == 'kepler':
             this_data_series = get_data_kepler(obsid)
-        else:
-            # This is where other mission-specific modules will go.
-            pass
+        if mission == "wuppe":
+            this_data_series = mpl_get_data_wuppe(obsid)
 
         # Append this DataSeries object to the list.
         all_data_series.extend([this_data_series])
@@ -117,7 +123,7 @@ def setup_args():
                         "values.")
 
     parser.add_argument("-o", "--obsids", action="store", dest="obsids",
-                        type=str.lower, nargs='+',
+                        type=str, nargs='+',
                         help="[Required] The observation ID(s) to retrieve data"
                         " from.  There must be the same number of 'missions' "
                         "values.")
