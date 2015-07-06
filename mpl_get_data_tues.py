@@ -58,8 +58,7 @@ def mpl_get_data_tues(obsid):
         fls = [fls[x] for x in sort_indexes]
 
         # Zip the wavelengths and fluxes into tuples to create the plot series.
-        wlfls = [(x, y) for x, y in zip(wls, fls)]
-        plot_series = [data_point(x=x, y=y) for x, y in wlfls]
+        plot_series = [data_point(x=x, y=y) for x, y in zip(wls, fls)]
 
         # Create the return DataSeries object.
         return_dataseries = DataSeries('tues', obsid, plot_series,
