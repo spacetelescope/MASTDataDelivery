@@ -86,7 +86,7 @@ def deliver_data(missions, obsids):
         if mission == "hut":
             this_data_series = mpl_get_data_hut(obsid)
         if mission == "iue":
-            this_data_series = get_data_iue(obsid)
+            this_data_series = get_data_iue(obsid.lower())
         if mission == 'kepler':
             this_data_series = get_data_kepler(obsid)
         if mission == "tues":
