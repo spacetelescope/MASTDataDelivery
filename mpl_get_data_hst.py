@@ -25,7 +25,7 @@ def mpl_get_data_hst(obsid):
 
     Error codes:
     0 = No error.
-    1 = No data returned by mast_plot.pl service.
+    1 = "File not found error" returned by mast_plot.pl.
     """
 
     # This defines a data point for a DataSeries object as a namedtuple.
@@ -40,7 +40,11 @@ def mpl_get_data_hst(obsid):
     return_request = requests.get("https://archive.stsci.edu/cgi-bin/mast_plot"
                                   ".pl?HST=" + obsid.upper()).json()
 
-    if len(return_request[0][0]) != 1:
+    if len(return_request[0]) == 0:
+        # File not found by service.
+        errcode = 1
+        return_dataseries = DataSeries('hst', obsid, [], [], [], [], errcode)
+    else:
         # Wavelengths are the first list in the returned 3-element list.
         wls = [float(x) for x in return_request[0][0]]
 
@@ -63,10 +67,6 @@ def mpl_get_data_hst(obsid):
         return_dataseries = DataSeries('hst', obsid, plot_series,
                                        ['HST_' + obsid],
                                        [hst_xunit], [hst_yunit], errcode)
-    else:
-        errcode = 1
-        # Otherwise there was likely a problem: file missing on disk, etc.
-        return_dataseries = DataSeries('hst', obsid, [], [], [], [], errcode)
 
     # Return the DataSeries object back to the calling module.
     return return_dataseries
