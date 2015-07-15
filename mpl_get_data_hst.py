@@ -40,6 +40,7 @@ def mpl_get_data_hst(obsid):
     # a 3-element list, each element itself if a list containing another list.
     return_request = requests.get("https://archive.stsci.edu/cgi-bin/mast_plot"
                                   ".pl?HST=" + obsid.upper())
+
     if return_request.status_code == 500:
         # If an HTTP 500 error is returned, catch it here, since it can't
         # be converted to a JSON string using the built-in json().
@@ -74,6 +75,7 @@ def mpl_get_data_hst(obsid):
             # Zip the wavelengths and fluxes into tuples to create the plot
             # series.
             plot_series = [[data_point(x=x, y=y) for x, y in zip(wls, fls)]]
+
             # Create the return DataSeries object.
             return_dataseries = DataSeries('hst', obsid, plot_series,
                                            ['HST_' + obsid],
