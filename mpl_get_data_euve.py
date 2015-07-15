@@ -27,6 +27,8 @@ def mpl_get_data_euve(obsid):
     0 = No error.
     1 = HTTP Error 500 code returned.
     2 = "File not found error" returned by mast_plot.pl.
+    3 = Wavelength and/or flux arrays are zero length.
+    4 = Wavelength and flux arrays are not of equal length.
     """
 
     # This defines a data point for a DataSeries object as a namedtuple.
@@ -65,21 +67,34 @@ def mpl_get_data_euve(obsid):
             # of the FITS files in the list.
             errcode = 0
 
-            # Make sure wavelengths and fluxes are sorted
-            # from smallest wavelength to largest.
-            sort_indexes = [x[0] for x in sorted(enumerate(wls),
-                                                 key=itemgetter(1))]
-            wls = [wls[x] for x in sort_indexes]
-            fls = [fls[x] for x in sort_indexes]
+            # Make sure wavelengths and fluxes are not empty and are same size.
+            if len(wls) > 0 and len(fls) > 0 and len(wls) == len(fls):
 
-            # Zip the wavelengths and fluxes into tuples to create the plot
-            # series.
-            plot_series = [[data_point(x=x, y=y) for x, y in zip(wls, fls)]]
+                # Make sure wavelengths and fluxes are sorted
+                # from smallest wavelength to largest.
+                sort_indexes = [x[0] for x in sorted(enumerate(wls),
+                                                     key=itemgetter(1))]
+                wls = [wls[x] for x in sort_indexes]
+                fls = [fls[x] for x in sort_indexes]
 
-            # Create the return DataSeries object.
-            return_dataseries = DataSeries('euve', obsid, plot_series,
-                                           ['EUVE_' + obsid],
-                                           [euve_xunit], [euve_yunit], errcode)
+                # Zip the wavelengths and fluxes into tuples to create the plot
+                # series.
+                plot_series = [[data_point(x=x, y=y) for x, y in zip(wls, fls)]]
+
+                # Create the return DataSeries object.
+                return_dataseries = DataSeries('euve', obsid, plot_series,
+                                               ['EUVE_' + obsid],
+                                               [euve_xunit], [euve_yunit],
+                                               errcode)
+            elif len(wls) == 0 or len(fls) == 0:
+                errcode = 3
+                return_dataseries = DataSeries('euve', obsid, [], [], [], [],
+                                               errcode)
+            else:
+                errcode = 4
+                return_dataseries = DataSeries('euve', obsid, [], [], [], [],
+                                               errcode)
+
 
     # Return the DataSeries object back to the calling module.
     return return_dataseries
