@@ -7,7 +7,6 @@
 """
 
 from astropy.io import fits
-import collections
 from data_series import DataSeries
 from parse_obsid_kepler import parse_obsid_kepler
 
@@ -33,9 +32,6 @@ def get_data_kepler(obsid):
     From this module:
     6 = Could not open one or more FITS file for reading.
     """
-
-    # This defines a data point for a DataSeries object as a namedtuple.
-    data_point = collections.namedtuple('DataPoint', ['x', 'y'])
 
     # For Kepler, this defines the x-axis and y-axis units as a string.
     kepler_xunit = "BJD"
@@ -74,13 +70,13 @@ def get_data_kepler(obsid):
                                        + ' Q' +
                                        parsed_files_result.quarters[i])
                     all_plot_labels[i*2] = this_plot_label + ' SAP'
-                    all_plot_series[i*2] = [data_point(x=x, y=y) for x, y in
+                    all_plot_series[i*2] = [x for x in
                                             zip(bjd, flux_sap)]
                     all_plot_xunits[i*2] = kepler_xunit
                     all_plot_yunits[i*2] = kepler_yunit
-                    
+
                     all_plot_labels[i*2+1] = this_plot_label + ' PDCSAP'
-                    all_plot_series[i*2+1] = [data_point(x=x, y=y) for x, y in
+                    all_plot_series[i*2+1] = [x for x in
                                               zip(bjd, flux_pdcsap)]
                     all_plot_xunits[i*2+1] = kepler_xunit
                     all_plot_yunits[i*2+1] = kepler_yunit

@@ -98,7 +98,7 @@ def deliver_data(missions, obsids):
         all_data_series.extend([this_data_series])
 
     # Return the list of DataSeries objects as a JSON string.
-    return json.dumps(all_data_series, ensure_ascii=True, check_circular=True,
+    return json.dumps(all_data_series, ensure_ascii=False, check_circular=False,
                       encoding="utf-8", default=json_encoder)
 #--------------------
 
