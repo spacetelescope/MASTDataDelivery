@@ -13,6 +13,7 @@ from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_iue import get_data_iue
 from get_data_kepler import get_data_kepler
 import json
+import os
 
 from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
@@ -22,6 +23,12 @@ from mpl_get_data_hst import mpl_get_data_hst
 from mpl_get_data_hut import mpl_get_data_hut
 from mpl_get_data_tues import mpl_get_data_tues
 from mpl_get_data_wuppe import mpl_get_data_wuppe
+
+# Default location of Kepler cache files.
+CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep + os.path.pardir +
+                     os.path.sep + "missions" + os.path.sep + "kepler" +
+                     os.path.sep + "lightcurves" + os.path.sep + "cache" +
+                     os.path.sep)
 
 #--------------------
 def json_encoder(obj):
@@ -33,7 +40,7 @@ def json_encoder(obj):
 
 
 #--------------------
-def deliver_data(missions, obsids):
+def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
     """
     Given a list of mission + obsid strings, returns the lightcurve and/or
     spectral data from each of them.
@@ -46,6 +53,10 @@ def deliver_data(missions, obsids):
     :param obsids: The list of observation IDs to retrieve the data from.
 
     :type obsids: list
+
+    :param cache_dir: Directory containing Kepler cache files.
+
+    :type cache_dir: str
 
     :returns: JSON -- The lightcurve or spectral data from the requested data
     products.
@@ -88,7 +99,20 @@ def deliver_data(missions, obsids):
         if mission == "iue":
             this_data_series = get_data_iue(obsid.lower())
         if mission == 'kepler':
-            this_data_series = get_data_kepler(obsid)
+            # If short cadence we use cached files for efficiency.
+            if "_sc_" in obsid:
+                # Make sure cache_dir is marked.
+                cache_dir = os.path.join(cache_dir, '')
+                cache_file = cache_dir + obsid + ".cache"
+                # Open the cache file and return that string.
+                if os.path.isfile(cache_file):
+                    with open(cache_file, 'r') as ifile:
+                        return ifile.readlines()[0]
+                else:
+                    # Cache file is missing, fall back to creating from FITS.
+                    this_data_series = get_data_kepler(obsid)
+            else:
+                this_data_series = get_data_kepler(obsid)
         if mission == "tues":
             this_data_series = mpl_get_data_tues(obsid)
         if mission == "wuppe":
@@ -137,6 +161,12 @@ def setup_args():
                         " from.  There must be the same number of 'missions' "
                         "values.")
 
+    parser.add_argument("-c", "--cdir", action="store", dest="cache_dir",
+                        type=str, default=CACHE_DIR_DEFAULT, help="Location of"
+                        " Kepler cache files.  Do not specify this unless you"
+                        " have a specific need to.  The default value should be"
+                        " correct for most use cases.")
+
     return parser
 #--------------------
 
@@ -146,7 +176,7 @@ if __name__ == "__main__":
     # Setup command-line arguments.
     ARGS = setup_args().parse_args()
 
-    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids)
+    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, cache=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
