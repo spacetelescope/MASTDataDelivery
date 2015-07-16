@@ -176,7 +176,7 @@ if __name__ == "__main__":
     # Setup command-line arguments.
     ARGS = setup_args().parse_args()
 
-    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, cache=ARGS.cache_dir)
+    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
