@@ -7,9 +7,9 @@ import deliver_data
 
 def make_kepler_sc_cache():
     # Base output directory.
-    cache_dir = '/Users/fleming/Work/Portal/missions/kepler/lightcurves/cache/'
+    cache_dir = '/ifs/public/mast/kepler/lightcurves/cache/'
     if not os.path.isdir(cache_dir):
-        os.path.mkdir(cache_dir)
+        os.mkdir(cache_dir)
 
     mission = "kepler"
 
