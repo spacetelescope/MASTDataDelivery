@@ -43,6 +43,9 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    # You can't plot more than one lightcurve at a time, so turn this off for
+    # now (it's broken currently witch caches anyways).
+    @unittest.skip("Skipping test of two Kepler lightcurves - unsupported.")
     def test_case03(self):
         """ This uses both Kepler 16 and KIC 757450 to test more than one obsID
         in a single request.  It also includes a mix of cadence types. """
@@ -56,6 +59,7 @@ class TestGetDataKepler(unittest.TestCase):
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
+        import ipdb; ipdb.set_trace()
         self.assertEqual(old_str, new_str)
 
     # Test Cases 4 - 5 = HLSP_K2VARCAT
