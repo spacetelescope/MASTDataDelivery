@@ -59,7 +59,6 @@ class TestGetDataKepler(unittest.TestCase):
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
-        import ipdb; ipdb.set_trace()
         self.assertEqual(old_str, new_str)
 
     # Test Cases 4 - 5 = HLSP_K2VARCAT
@@ -236,6 +235,18 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    # Test Case 18 = K2
+    def test_case18(self):
+        """ Test of K2 extracted lightcurves (from mission). """
+        new_str = deliver_data.deliver_data(
+            ["k2"], ["ktwo205896873-c03_lc"])
+        old_file = self.reference_file_path + "test_case_18.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
 
 #--------------------
 

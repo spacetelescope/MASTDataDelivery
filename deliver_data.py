@@ -11,6 +11,7 @@ import argparse
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_iue import get_data_iue
+from get_data_k2 import get_data_k2
 from get_data_kepler import get_data_kepler
 import json
 import os
@@ -98,6 +99,8 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
             this_data_series = mpl_get_data_hut(obsid)
         if mission == "iue":
             this_data_series = get_data_iue(obsid.lower())
+        if mission == "k2":
+            this_data_series = get_data_k2(obsid)
         if mission == 'kepler':
             # If short cadence we use cached files for efficiency.
             if "_sc_" in obsid:
@@ -148,6 +151,7 @@ def setup_args():
                                  'hst',
                                  'hut',
                                  'iue',
+                                 'k2',
                                  'kepler',
                                  'tues',
                                  'wuppe'],

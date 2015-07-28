@@ -106,3 +106,10 @@ Test Case 17::
     python deliver_data.py -m iue -o swp32470 > unit_test_reffiles/deliver_data/test_case_17.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_17.txt
+
+Test Case 18::
+
+    python deliver_data.py -m k2 -o ktwo205896873-c03_lc > unit_test_reffiles/deliver_data/test_case_18.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_18.txt
+
