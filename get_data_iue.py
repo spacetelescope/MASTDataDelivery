@@ -116,6 +116,9 @@ def get_data_iue(obsid):
                         aperture = hdulist[0].header["aperture"].strip()
                         # Get the dispersion type from the primary header.
                         dispersion = hdulist[0].header["disptype"].strip()
+                        # These lists will store all the orders' wls and fls.
+                        spec_wls = []
+                        spec_fls = []
                         # Loop over each order.
                         for order in xrange(n_orders):
                             # Number of fluxes for this order.
@@ -136,26 +139,28 @@ def get_data_iue(obsid):
                             all_fluxes = hdulist[1].data["abs_cal"][order]
                             fls = [float(x) for x in
                                    all_fluxes[(s_pix-1):(s_pix-1+n_p-1+1)]]
-                            # Make sure wavelengths and fluxes are sorted
-                            # from smallest wavelength to largest.
-                            sort_indexes = [x[0] for x in sorted(enumerate(wls),
-                                                                 key=
-                                                                 itemgetter(1))]
-                            wls = [wls[x] for x in sort_indexes]
-                            fls = [fls[x] for x in sort_indexes]
-                            wlfls = [(x, y) for x, y in zip(wls, fls) if y !=
-                                     0.]
-                            if wlfls != []:
-                                all_plot_xunits.append(iue_xunit)
-                                all_plot_yunits.append(iue_yunit)
-                                all_plot_series.append([data_point(x=x, y=y) for
-                                                        x, y in wlfls])
-                                all_plot_labels.append(
-                                    'IUE_' + obsid +
-                                    ' DISP:' + dispersion +
-                                    ' APER:' + aperture +
-                                    ' ORDER:' +
-                                    '{0:03d}'.format(orders[order]))
+                            # Add the wls and fls to the master lists.
+                            spec_wls.extend(wls)
+                            spec_fls.extend(fls)
+
+                        # Make sure wavelengths and fluxes are sorted
+                        # from smallest wavelength to largest.
+                        sort_indexes = [x[0] for x in
+                                        sorted(enumerate(spec_wls),
+                                               key=itemgetter(1))]
+                        spec_wls = [spec_wls[x] for x in sort_indexes]
+                        spec_fls = [spec_fls[x] for x in sort_indexes]
+                        wlfls = [(x, y) for x, y in zip(spec_wls, spec_fls) if
+                                 y != 0.]
+                        if wlfls != []:
+                            all_plot_xunits.append(iue_xunit)
+                            all_plot_yunits.append(iue_yunit)
+                            all_plot_series.append([data_point(x=x, y=y) for
+                                                    x, y in wlfls])
+                            all_plot_labels.append(
+                                'IUE_' + obsid +
+                                ' DISP:' + dispersion +
+                                ' APER:' + aperture)
             except IOError:
                 errcode = 3
                 all_plot_labels.append('')
