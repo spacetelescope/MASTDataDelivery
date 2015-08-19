@@ -16,236 +16,6 @@ from parse_obsid_iue import parse_obsid_iue
 from scipy.interpolate import interp1d
 
 #--------------------
-def interpolate_subspec(wls, fls, prev_index, gap_ind, wl_step):
-    """
-    Interpolates a subsection of a spectrum (from prev_index to gap_index) onto
-    a new grid.
-
-    :param wls: List of subsection wavelengths.
-
-    :type wls: list
-
-    :param fls: List of subsection fluxes.
-
-    :type fls: list
-
-    :param prev_index: Starting index of subsection.
-
-    :type prev_index: int
-
-    :param gap_ind: Ending index of subsection.
-
-    :type gap_ind: int
-
-    :param wl_step: Wavelength step size to use for interpolated spectrum.
-
-    :type wl_step: float
-
-    :returns: tuple -- (list of int. wavelengths, list of int. fluxes)
-    """
-    # Get the subspectrum
-    sub_spec_wls = wls[prev_index:gap_ind+1]
-    sub_spec_fls = fls[prev_index:gap_ind+1]
-    # Interpolate onto the new grid, using cubic splines.
-    interp_f = interp1d(sub_spec_wls, sub_spec_fls, kind="linear")
-
-    min_wl = min(sub_spec_wls)
-    max_wl = max(sub_spec_wls)
-    n_steps = math.ceil((max_wl - min_wl) / wl_step)
-    # Try a couple step sizes to get as close to the ideal size as possible.
-    new_wls1, step_size1 = numpy.linspace(min_wl, max_wl, n_steps,
-                                          retstep=True)
-    new_wls2, step_size2 = numpy.linspace(min_wl, max_wl, n_steps+1,
-                                          retstep=True)
-    new_wls3, step_size3 = numpy.linspace(min_wl, max_wl, n_steps-1,
-                                          retstep=True)
-    # Choose the linear step size closest to our desired step size.
-    diffs = [abs(x-wl_step) for x in [step_size1, step_size2, step_size3]]
-    if diffs[0] <= diffs[1] and diffs[0] <= diffs[2]:
-        new_wls = new_wls1
-    elif diffs[1] <= diffs[2] and diffs[1] <= diffs[0]:
-        new_wls = new_wls2
-    else:
-        new_wls = new_wls3
-    # Calculate the interpolated values and extend the spectrum with them.
-    return (new_wls, interp_f(new_wls))
-#--------------------
-
-#--------------------
-def resample_spectrum(combined_spectrum, camera, showplot=False):
-    """
-    Resamples the order-combined spectrum to an evenly-sampled wavelength scale.
-
-    :param combined_spectrum: The order-combined spectrum with unequal
-    wavelength sampling.  It is a list of (wl,fl) tuples.
-
-    :type combined_spectrum: list
-
-    :param camera: The camera used for this spectrum, either "SWP", "LWR", or
-    "LWP".
-
-    :type camera: str
-
-    :param showplot: Set to true to show a plot of the original vs. interpolated
-    spectrum (default = False, only set when debugging).
-
-    :type showplot: bool
-
-    :returns: list -- A list of (wl,fl) tuples of the evenly-sampled spectrum.
-    """
-
-    # Unpack the wavelengths and fluxes.
-    wls, fls = zip(*combined_spectrum)
-
-    # Generate the re-sampled x-axis, starting at the min. wavelength and ending
-    # at the max. wavelength.  The final bin size should be 0.05 Ang. for SWP
-    # cameras or 0.10 Ang. for LWP and LWR cameras.  We oversample by a factor
-    # of 10 before binning down.
-    if camera in ["LWP", "LWR"]:
-        wl_step = 0.01
-    else:
-        wl_step = 0.005
-
-    # Identify gaps in the data, interpolate those gaps separately so you don't
-    # interpolate over a gap.  A gap is defined as anywhere with >3 missing
-    # points (based on the mean wavelength difference across the spectrum).
-    wl_diffs = numpy.diff(wls)
-    # These are the *end points* of a given subsection.
-    wl_gaps = numpy.where(numpy.digitize(wl_diffs, [3.*numpy.mean(wl_diffs)]) !=
-                          0)[0]
-    # If there are no gaps at all, then define the gap to be the last element.
-    #### FIX ME!
-
-    # Build the interpolated spectrum for each subspectrum (skipping over gaps).
-    prev_index = 0
-    interpolated_wls = []
-    interpolated_fls = []
-    binned_wls = []
-    binned_fls = []
-    for gap_ind in wl_gaps:
-        # Get interpolated spectrum for this subsection.
-        new_wls, new_fls = interpolate_subspec(wls, fls, prev_index, gap_ind,
-                                               wl_step)
-        new_wls = list(new_wls)
-        new_fls = list(new_fls)
-        # Push the interpolated values into the list via extension.
-        interpolated_wls.extend(new_wls)
-        interpolated_fls.extend(new_fls)
-        # Now bin the spectrum down by a factor of 10 in resolution to our
-        # desired wavelength spacing.
-        # First need to pad to an integer of 10 by adding NaNs.
-        if len(new_wls) % 10 != 0:
-            n_pad = 10 - (len(new_wls) % 10)
-            new_wls.extend([numpy.nan]*n_pad)
-            new_fls.extend([numpy.nan]*n_pad)
-        binned_sub_wl = numpy.nanmean(numpy.asarray(new_wls).reshape(-1, 10),
-                                      axis=1)
-        binned_sub_fl = numpy.nanmean(numpy.asarray(new_fls).reshape(-1, 10),
-                                      axis=1)
-        binned_wls.extend(binned_sub_wl)
-        binned_fls.extend(binned_sub_fl)
-        # Update where the next sub_spectrum starts.
-        prev_index = gap_ind+1
-
-    # If the last gap did not cover to the end of the spectrum, do one more
-    # subsection.
-    if prev_index < len(wls):
-        # Get interpolated spectrum for the final subsection.
-        new_wls, new_fls = interpolate_subspec(wls, fls, prev_index, len(wls),
-                                               wl_step)
-        new_wls = list(new_wls)
-        new_fls = list(new_fls)
-        # Push the interpolated values into the list via extension.
-        interpolated_wls.extend(new_wls)
-        interpolated_fls.extend(new_fls)
-        # Now bin the spectrum down by a factor of 10 in resolution to our
-        # desired wavelength spacing.
-        # First need to pad to an integer of 10 by adding NaNs.
-        if len(new_wls) % 10 != 0:
-            n_pad = 10 - (len(new_wls) % 10)
-            new_wls.extend([numpy.nan]*n_pad)
-            new_fls.extend([numpy.nan]*n_pad)
-        binned_sub_wl = numpy.nanmean(numpy.asarray(new_wls).reshape(-1, 10),
-                                      axis=1)
-        binned_sub_fl = numpy.nanmean(numpy.asarray(new_fls).reshape(-1, 10),
-                                      axis=1)
-        binned_wls.extend(binned_sub_wl)
-        binned_fls.extend(binned_sub_fl)
-
-    # Show the plotted spectra if requested.
-    if showplot:
-        import matplotlib.pyplot as pyp
-        pyp.plot(wls, fls, '-ko')
-        pyp.plot(binned_wls, binned_fls, '-go')
-        for gapmark_ind in wl_gaps:
-            pyp.axvline(wls[gapmark_ind])
-        pyp.show()
-    return zip(binned_wls, binned_fls)
-#--------------------
-
-#--------------------
-def order_combine(order_spectra, camera, showplot=False):
-    """
-    Combine spectral orders following Solano's definition of how to cut each
-    order's spectrum to deal with overlap.
-
-    :param order_spectra: A list containing the wavelengths, fluxes, and order
-    numbers for each spectral order, stored as dicts.
-
-    :type order_spectra: list
-
-    :param camera: The camera used for this spectrum, either "SWP", "LWR", or
-    "LWP".
-
-    :type camera: str
-
-    :param showplot: Set to true to show a plot of the original vs. interpolated
-    spectrum (default = False, only set when debugging).
-
-    :type showplot: bool
-
-    :returns: list -- combined wavelength, flux pairs
-    """
-    all_wls = []
-    all_fls = []
-    for ord_ind in xrange(len(order_spectra)-1):
-        # Current order ("m").
-        wls1 = order_spectra[ord_ind]['wls']
-        fls1 = order_spectra[ord_ind]['fls']
-
-        # Next order ("m-1").
-        wls2 = order_spectra[ord_ind+1]['wls']
-        fls2 = order_spectra[ord_ind+1]['fls']
-
-        # Determin the cut wavelength following Equation 1 and 2 from Solano.
-        if camera in ["LWP", "LWR"]:
-            cut_wl = wls2[0] + 2. * (wls1[-1]-wls2[0])/3.
-        else:
-            cut_wl = wls2[0] + (wls1[-1]-wls2[0])/3.
-
-        if showplot:
-            import matplotlib.pyplot as pyp
-            pyp.plot(wls1, fls1, 'bo')
-            pyp.plot(wls2, fls2, 'ro')
-            pyp.axvline(cut_wl)
-            pyp.show()
-
-        # Keep those wavelengths from the two orders that don't cross the cut.
-        keep1 = numpy.where(numpy.asarray(wls1) <= cut_wl)[0]
-        keep2 = numpy.where(numpy.asarray(wls2) > cut_wl)[0]
-        order_spectra[ord_ind]['wls'] = [wls1[i] for i in keep1]
-        order_spectra[ord_ind]['fls'] = [fls1[i] for i in keep1]
-        order_spectra[ord_ind+1]['wls'] = [wls2[i] for i in keep2]
-        order_spectra[ord_ind+1]['fls'] = [fls2[i] for i in keep2]
-
-    # Concatenate the trimmed order spectra.
-    for ord_ind in xrange(len(order_spectra)):
-        all_wls.extend(order_spectra[ord_ind]['wls'])
-        all_fls.extend(order_spectra[ord_ind]['fls'])
-    return zip(all_wls, all_fls)
-#--------------------
-
-#--------------------
 def calculate_cut_wl(camera, order, aperture):
     """
     Calculate the cut wavelength for an order following Solano's paper.
@@ -294,6 +64,254 @@ def calculate_cut_wl(camera, order, aperture):
         else:
             cut_wl = 9E9
     return cut_wl
+#--------------------
+
+#--------------------
+def interpolate_subspec(wls, fls, prev_index, gap_ind, wl_step):
+    """
+    Interpolates a subsection of a spectrum (from prev_index to gap_index) onto
+    a new grid.
+
+    :param wls: List of subsection wavelengths.
+
+    :type wls: list
+
+    :param fls: List of subsection fluxes.
+
+    :type fls: list
+
+    :param prev_index: Starting index of subsection.
+
+    :type prev_index: int
+
+    :param gap_ind: Ending index of subsection.
+
+    :type gap_ind: int
+
+    :param wl_step: Wavelength step size to use for interpolated spectrum.
+
+    :type wl_step: float
+
+    :returns: tuple -- (list of int. wavelengths, list of int. fluxes)
+    """
+    # Get the subspectrum
+    sub_spec_wls = wls[prev_index:gap_ind+1]
+    sub_spec_fls = fls[prev_index:gap_ind+1]
+    # Interpolate onto the new grid, using linear interpolation.
+    interp_f = interp1d(sub_spec_wls, sub_spec_fls, kind="linear")
+
+    # Calculate the number of linear wavelength steps needed.
+    min_wl = min(sub_spec_wls)
+    max_wl = max(sub_spec_wls)
+    n_steps = math.ceil((max_wl - min_wl) / wl_step)
+    # Try a couple step sizes to get as close to the ideal size as possible.
+    new_wls1, step_size1 = numpy.linspace(min_wl, max_wl, n_steps,
+                                          retstep=True)
+    new_wls2, step_size2 = numpy.linspace(min_wl, max_wl, n_steps+1,
+                                          retstep=True)
+    new_wls3, step_size3 = numpy.linspace(min_wl, max_wl, n_steps-1,
+                                          retstep=True)
+    # Choose the linear step size closest to our desired step size.
+    diffs = [abs(x-wl_step) for x in [step_size1, step_size2, step_size3]]
+    if diffs[0] <= diffs[1] and diffs[0] <= diffs[2]:
+        new_wls = new_wls1
+    elif diffs[1] <= diffs[2] and diffs[1] <= diffs[0]:
+        new_wls = new_wls2
+    else:
+        new_wls = new_wls3
+    # Calculate the interpolated values and extend the spectrum with them.
+    return (list(new_wls), list(interp_f(new_wls)))
+#--------------------
+
+#--------------------
+def order_combine(order_spectra, camera, showplot=False):
+    """
+    Combine spectral orders following Solano's definition of how to cut each
+    order's spectrum to deal with overlap.
+
+    :param order_spectra: A list containing the wavelengths, fluxes, and order
+    numbers for each spectral order, stored as dicts.  The wavelengths and
+    fluxes are numpy.ndarrays
+
+    :type order_spectra: list
+
+    :param camera: The camera used for this spectrum, either "SWP", "LWR", or
+    "LWP".
+
+    :type camera: str
+
+    :param showplot: Set to true to show a plot of the original vs. interpolated
+    spectrum (default = False, only set when debugging).
+
+    :type showplot: bool
+
+    :returns: list -- combined wavelength, flux pairs
+    """
+    # These lists will hold the order-combined wavelengths and spectra.
+    all_wls = []
+    all_fls = []
+
+    for ord_ind in xrange(len(order_spectra)-1):
+        # Current order ("m").
+        wls1 = order_spectra[ord_ind]['wls']
+        fls1 = order_spectra[ord_ind]['fls']
+
+        # Next order ("m-1").
+        wls2 = order_spectra[ord_ind+1]['wls']
+        fls2 = order_spectra[ord_ind+1]['fls']
+
+        # Determine the cut wavelength following Equations 1 and 2 from Solano.
+        if camera in ["LWP", "LWR"]:
+            cut_wl = wls2[0] + 2. * (wls1[-1]-wls2[0])/3.
+        else:
+            cut_wl = wls2[0] + (wls1[-1]-wls2[0])/3.
+
+        if showplot:
+            import matplotlib.pyplot as pyp
+            pyp.plot(wls1, fls1, 'bo')
+            pyp.plot(wls2, fls2, 'ro')
+            pyp.axvline(cut_wl)
+            pyp.show()
+
+        # Keep those wavelengths from the two orders that don't cross the cut.
+        keep1 = numpy.where(wls1 <= cut_wl)[0]
+        keep2 = numpy.where(wls2 > cut_wl)[0]
+        order_spectra[ord_ind]['wls'] = wls1[keep1]
+        order_spectra[ord_ind]['fls'] = fls1[keep1]
+        order_spectra[ord_ind+1]['wls'] = wls2[keep2]
+        order_spectra[ord_ind+1]['fls'] = fls2[keep2]
+        # Update the order that has already been trimmed on both sides.
+        all_wls.extend(order_spectra[ord_ind]['wls'])
+        all_fls.extend(order_spectra[ord_ind]['fls'])
+        # If this is the second-to-last order, update the last order as well,
+        # since that is only trimmed on one side.
+        if ord_ind == len(order_spectra)-2:
+            all_wls.extend(order_spectra[ord_ind+1]['wls'])
+            all_fls.extend(order_spectra[ord_ind+1]['fls'])
+
+    return zip(all_wls, all_fls)
+#--------------------
+
+#--------------------
+def resample_spectrum(combined_spectrum, camera, showplot=False):
+    """
+    Resamples the order-combined spectrum to an evenly-sampled wavelength scale.
+
+    :param combined_spectrum: The order-combined spectrum with unequal
+    wavelength sampling.  It is a list of (wl,fl) tuples.
+
+    :type combined_spectrum: list
+
+    :param camera: The camera used for this spectrum, either "SWP", "LWR", or
+    "LWP".
+
+    :type camera: str
+
+    :param showplot: Set to true to show a plot of the original vs. interpolated
+    spectrum (default = False, only set when debugging).
+
+    :type showplot: bool
+
+    :returns: list -- A list of (wl,fl) tuples of the evenly-sampled spectrum.
+    """
+
+    # Unpack the wavelengths and fluxes.
+    wls, fls = zip(*combined_spectrum)
+
+    # Generate the re-sampled x-axis, starting at the min. wavelength and ending
+    # at the max. wavelength.  The final bin size should be 0.05 Ang. for SWP
+    # cameras or 0.10 Ang. for LWP and LWR cameras.  We oversample by a factor
+    # of 10 before binning down.
+    oversample = 10.
+    if camera in ["LWP", "LWR"]:
+        wl_step = 0.1 / oversample
+    else:
+        wl_step = 0.05 / oversample
+
+    # Identify gaps in the data, interpolate those gaps separately so you don't
+    # interpolate over a gap.  A gap is defined as anywhere with more than three
+    # missing points (based on the mean wavelength difference across the
+    # spectrum).
+    wl_diffs = numpy.diff(wls)
+    # These are the *end points* of a given subsection.
+    wl_gaps = numpy.where(numpy.digitize(wl_diffs, [3.*numpy.mean(wl_diffs)]) !=
+                          0)[0]
+    # If there are no gaps at all, then define the gap to be the last element.
+    if len(wl_gaps) == 0:
+        wl_gaps = numpy.asarray([len(wls)-1])
+
+    # Build the binned spectrum for each subspectrum (skipping over gaps).
+    prev_index = 0
+    binned_wls = []
+    binned_fls = []
+    # Only build up the interpolated spectrum if it is to be plotted.
+    if showplot:
+        interpolated_wls = []
+        interpolated_fls = []
+
+    for gap_ind in wl_gaps:
+        # Get interpolated spectrum for this subsection.
+        new_wls, new_fls = interpolate_subspec(wls, fls, prev_index, gap_ind,
+                                               wl_step)
+        # Push the interpolated values into the list via extension, but only if
+        # it is to be plotted.
+        if showplot:
+            interpolated_wls.extend(new_wls)
+            interpolated_fls.extend(new_fls)
+        # Now bin the spectrum down by a factor of 10 in resolution to our
+        # desired wavelength spacing.
+        # First need to pad to an integer of 10 by adding NaNs.
+        if len(new_wls) % 10 != 0:
+            n_pad = 10 - (len(new_wls) % 10)
+            new_wls.extend([numpy.nan]*n_pad)
+            new_fls.extend([numpy.nan]*n_pad)
+        binned_sub_wl = numpy.nanmean(numpy.asarray(new_wls).reshape(-1, 10),
+                                      axis=1)
+        binned_sub_fl = numpy.nanmean(numpy.asarray(new_fls).reshape(-1, 10),
+                                      axis=1)
+        binned_wls.extend(binned_sub_wl)
+        binned_fls.extend(binned_sub_fl)
+        # Update where the next sub_spectrum starts.
+        prev_index = gap_ind+1
+
+    # If the last gap did not cover to the end of the spectrum, do one more
+    # subsection.
+    if prev_index < len(wls):
+        # Get interpolated spectrum for the final subsection.
+        new_wls, new_fls = interpolate_subspec(wls, fls, prev_index, len(wls),
+                                               wl_step)
+        # Push the interpolated values into the list via extension, but only if
+        # it is to be plotted.
+        if showplot:
+            interpolated_wls.extend(new_wls)
+            interpolated_fls.extend(new_fls)
+        # Now bin the spectrum down by a factor of 10 in resolution to our
+        # desired wavelength spacing.
+        # First need to pad to an integer of 10 by adding NaNs.
+        if len(new_wls) % 10 != 0:
+            n_pad = 10 - (len(new_wls) % 10)
+            new_wls.extend([numpy.nan]*n_pad)
+            new_fls.extend([numpy.nan]*n_pad)
+        binned_sub_wl = numpy.nanmean(numpy.asarray(new_wls).reshape(-1, 10),
+                                      axis=1)
+        binned_sub_fl = numpy.nanmean(numpy.asarray(new_fls).reshape(-1, 10),
+                                      axis=1)
+        binned_wls.extend(binned_sub_wl)
+        binned_fls.extend(binned_sub_fl)
+
+    # Show the plotted spectra if requested.
+    if showplot:
+        import matplotlib.pyplot as pyp
+        pyp.plot(wls, fls, '-ko')
+        # Uncomment the lines below to overplot the (oversampled) interpolated
+        # spectrum.
+        #if showplot:
+        #    pyp.plot(interpolated_wls, interpolated_fls, '-ro')
+        pyp.plot(binned_wls, binned_fls, '-go')
+        for gapmark_ind in wl_gaps:
+            pyp.axvline(wls[gapmark_ind])
+        pyp.show()
+    return zip(binned_wls, binned_fls)
 #--------------------
 
 #--------------------
@@ -448,8 +466,9 @@ def get_data_iue(obsid):
                                 fls = [fls[i] for i in keep]
                                 # Create a dict that will store this order's
                                 # info.
-                                order_spec = {'order':orders[order], 'wls':wls,
-                                              'fls':fls}
+                                order_spec = {'order':orders[order],
+                                              'wls':numpy.asarray(wls),
+                                              'fls':numpy.asarray(fls)}
                                 order_spectra.append(order_spec)
 
                         # Order-combine the spectra.
