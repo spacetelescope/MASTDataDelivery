@@ -354,9 +354,17 @@ def get_data_iue(obsid):
     all_plot_labels = []
     all_plot_series = []
 
+    # Until the client code can be updated, we can only return *one* plot series
+    # for spectra, so for IUE double-dispersion obsIDs, only return the high
+    # dispersion spectrum for this obsID.
+    spec_files_touse = parsed_files_result.specfiles
+    if len(parsed_files_result.specfiles) > 1:
+        spec_files_touse = [
+            x for x in parsed_files_result.specfiles if "mxhi.gz" in x]
+
     # For each file, read in the contents and create a return JSON object.
     if parsed_files_result.errcode == 0:
-        for sfile in parsed_files_result.specfiles:
+        for sfile in spec_files_touse:
             # Figure out if this is an mxhi or mxlo spectrum.
             if sfile[-7:] == "mxlo.gz":
                 is_lo = True
@@ -376,6 +384,8 @@ def get_data_iue(obsid):
                         dispersion = hdulist[0].header["disptype"]
                         # Get the aperture size(s) from the header.
                         apertures = hdulist[1].data["aperture"]
+                        if len(apertures) > 1:
+                            apertures = ['LARGE']
                         n_apertures = len(apertures)
                         # Number of spectral data points for each aperture size.
                         n_wls = [int(x) for x in hdulist[1].data["npoints"]]
