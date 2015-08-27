@@ -31,7 +31,7 @@ CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "missions" + os.path.sep + "kepler" +
                      os.path.sep + "lightcurves" + os.path.sep + "cache" +
                      os.path.sep)
-FILTER_DEFAULT = None
+FILTERS_DEFAULT = None
 
 #--------------------
 def json_encoder(obj):
@@ -72,7 +72,8 @@ def json_too_big_object(mission, obsid):
 
 
 #--------------------
-def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
+def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
+                 cache_dir=CACHE_DIR_DEFAULT):
     """
     Given a list of mission + obsid strings, returns the lightcurve and/or
     spectral data from each of them.
@@ -86,6 +87,11 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
 
     :type obsids: list
 
+    :param filters: The list of FILTER values for the observation ID, one per
+    'obsid'.
+
+    :type filters: list
+
     :param cache_dir: Directory containing Kepler cache files.
 
     :type cache_dir: str
@@ -93,6 +99,11 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
     :returns: JSON -- The lightcurve or spectral data from the requested data
     products.
     """
+
+    # If the list of filters is not supplied (because not all missions use it),
+    # then just default to a list of a single whitespace strings.
+    if filters is None:
+        filters = [' '] * len(missions)
 
     # The length of the 'missions' and 'obsids' lists must be equal.
     if len(missions) != len(obsids):
@@ -115,7 +126,7 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
     # a list to store them all in.
     all_data_series = []
 
-    for mission, obsid in zip(missions, obsids):
+    for mission, obsid, filt in zip(missions, obsids, filters):
         if mission == "befs":
             this_data_series = mpl_get_data_befs(obsid)
         if mission == "euve":
@@ -133,7 +144,7 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
         if mission == "hut":
             this_data_series = mpl_get_data_hut(obsid)
         if mission == "iue":
-            this_data_series = get_data_iue(obsid.lower())
+            this_data_series = get_data_iue(obsid.lower(), filt)
         if mission == "k2":
             this_data_series = get_data_k2(obsid)
         if mission == 'kepler':
@@ -219,8 +230,9 @@ def setup_args():
                         " have a specific need to.  The default value should be"
                         " correct for most use cases.")
 
-    parser.add_argument("-f", "--filter", action="store", dest="filter",
-                        type=str, default=FILTER_DEFAULT, help="Some missions"
+    parser.add_argument("-f", "--filters", action="store", dest="filters",
+                        type=str, nargs='+', default=FILTERS_DEFAULT,
+                        help="Some missions"
                         " require additional data be specified beyond the"
                         " observation ID to uniquely identify what spectrum to"
                         " return (e.g., IUE).  The FILTER column is one"
@@ -238,7 +250,8 @@ if __name__ == "__main__":
     # Setup command-line arguments.
     ARGS = setup_args().parse_args()
 
-    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, cache_dir=ARGS.cache_dir)
+    JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, filters=ARGS.filters,
+                               cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING

@@ -315,7 +315,7 @@ def resample_spectrum(combined_spectrum, camera, showplot=False):
 #--------------------
 
 #--------------------
-def get_data_iue(obsid):
+def get_data_iue(obsid, filt):
     """
     Given an IUE observation ID, returns the spectral data.  Note that, in some
     cases, an observation ID has both a low and high dispersion spectrum
@@ -326,6 +326,11 @@ def get_data_iue(obsid):
 
     :type obsid: str
 
+    :param filt: The filter for this IUE observation ID.  It must be either
+    "LOW_DISP" or "HIGH_DISP".
+
+    :type filt: str
+
     :returns: JSON -- The spectral data for this observation ID.
 
     Error codes:
@@ -335,7 +340,12 @@ def get_data_iue(obsid):
     2 = No mxlo or mxhi file found on disk.
     From this module:
     3 = Could not open one or more FITS file for reading.
+    4 = Filter value is not an accepted value.
     """
+
+    # This error code will be used unless there's a problem reading any
+    # of the FITS files in the list, or the FILTER value is not understood.
+    errcode = 0
 
     # This defines a data point for a DataSeries object as a namedtuple.
     data_point = collections.namedtuple('DataPoint', ['x', 'y'])
@@ -346,7 +356,11 @@ def get_data_iue(obsid):
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    parsed_files_result = parse_obsid_iue(obsid)
+    if filt.upper() in ["LOW_DISP", "HIGH_DISP"]:
+        parsed_files_result = parse_obsid_iue(obsid, filt.upper())
+        errcode = parsed_files_result.errcode
+    else:
+        errcode = 4
 
     # In the case of low dispersion spectra, there can be two apertures for
     # a single obsID.  In that case, we return a list of TWO DataSeries, one
@@ -354,17 +368,9 @@ def get_data_iue(obsid):
     # were two different obsIDs in the case of a double-aperture.
     all_data_series = []
 
-    # Until the client code can be updated, we can only return *one* plot series
-    # for spectra, so for IUE double-dispersion obsIDs, only return the high
-    # dispersion spectrum for this obsID.
-    spec_files_touse = parsed_files_result.specfiles
-    if len(parsed_files_result.specfiles) > 1:
-        spec_files_touse = [
-            x for x in parsed_files_result.specfiles if "mxhi.gz" in x]
-
     # For each file, read in the contents and create a return JSON object.
-    if parsed_files_result.errcode == 0:
-        for sfile in spec_files_touse:
+    if errcode == 0:
+        for sfile in parsed_files_result.specfiles:
             # Figure out if this is an mxhi or mxlo spectrum.
             if sfile[-7:] == "mxlo.gz":
                 is_lo = True
@@ -372,10 +378,6 @@ def get_data_iue(obsid):
             else:
                 is_lo = False
                 is_hi = True
-
-            # This error code will be used unless there's a problem reading any
-            # of the FITS files in the list.
-            errcode = 0
 
             try:
                 with fits.open(sfile) as hdulist:
@@ -509,7 +511,8 @@ def get_data_iue(obsid):
         # This is where an error DataSeries object would be returned.
         all_data_series.append(
             DataSeries('iue', obsid, [], [], [],
-                       [], parsed_files_result.errcode))
+                       [], errcode))
+
     # Return the DataSeries object back to the calling module.
     if len(all_data_series) == 1:
         return all_data_series[0]

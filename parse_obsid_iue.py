@@ -10,13 +10,18 @@ import collections
 import os
 
 #--------------------
-def parse_obsid_iue(obsid):
+def parse_obsid_iue(obsid, filt):
     """
     Given an IUE observation ID, return the file to read.
 
     :param obsid: The IUE observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param filt: The filter for this IUE observation ID.  It must be either
+    "LOW_DISP" or "HIGH_DISP".
+
+    :type filt: str
 
     :returns: tuple -- An error code and a file to read, including the path.
 
@@ -48,12 +53,14 @@ def parse_obsid_iue(obsid):
     mxlo_file = file_location + obsid + ".mxlo.gz"
     mxhi_file = file_location + obsid + ".mxhi.gz"
 
-    # Identify which file to return.  It should be one or both.
-    if os.path.isfile(mxlo_file) or os.path.isfile(mxhi_file):
-        return parsed_values(errcode=error_code, specfiles=[x for x in
-                                                            [mxlo_file,
-                                                             mxhi_file] if
-                                                            os.path.isfile(x)])
+    # Identify which file to return based on the FILTER requested.
+    if filt == "LOW_DISP":
+        file_to_return = mxlo_file
+    else:
+        file_to_return = mxhi_file
+
+    if os.path.isfile(file_to_return):
+        return parsed_values(errcode=error_code, specfiles=[file_to_return])
     else:
         error_code = 2
         return parsed_values(errcode=error_code, specfiles=[''])
