@@ -11,6 +11,7 @@ import argparse
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_iue import get_data_iue
+from data_series import DataSeries
 from get_data_k2 import get_data_k2
 from get_data_kepler import get_data_kepler
 import json
@@ -30,6 +31,7 @@ CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "missions" + os.path.sep + "kepler" +
                      os.path.sep + "lightcurves" + os.path.sep + "cache" +
                      os.path.sep)
+FILTER_DEFAULT = None
 
 #--------------------
 def json_encoder(obj):
@@ -37,6 +39,35 @@ def json_encoder(obj):
     Defines a method to use when serializing into JSON.
     """
     return obj.__dict__
+#--------------------
+
+#--------------------
+def json_too_big_object(mission, obsid):
+    """
+    Returns a default JSON object when the requested data is too large for the
+    client to handle.
+
+    :param mission: The mission where the data come from.
+
+    :type mission: str
+
+    :param obsid: The observation ID to retrieve the data from.
+
+    :type obsid: str
+
+    :returns: JSON -- The default JSON to return when the requested data is too
+    large for the MAST Portal to handle.  Note the error code for this scenario
+    is set to 99.
+    """
+    # Define the custom error code.
+    errcode = 99
+    # Crate the return list of data series.
+    all_data_series = [DataSeries(mission, obsid, [], [], [], [], errcode)]
+    # Create the default return JSON object.
+    return_json = json.dumps(all_data_series, ensure_ascii=False,
+                             check_circular=False, encoding="utf-8",
+                             default=json_encoder)
+    return return_json
 #--------------------
 
 
@@ -76,6 +107,10 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
     missions = [missions[x] for x in sort_indexes]
     obsids = [obsids[x] for x in sort_indexes]
 
+    # This defines the maximum allowed size of a return JSON string
+    # (roughly in MB).
+    max_json_size = 64.E6
+
     # Each mission + obsID pair will have a DataSeries object returned, so make
     # a list to store them all in.
     all_data_series = []
@@ -110,7 +145,11 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
                 # Open the cache file and return that string.
                 if os.path.isfile(cache_file):
                     with open(cache_file, 'r') as ifile:
-                        return ifile.readlines()[0]
+                        return_string = ifile.readlines()[0]
+                        if len(return_string) <= max_json_size:
+                            return return_string
+                        else:
+                            return json_too_big_object(mission, obsid)
                 else:
                     # Cache file is missing, fall back to creating from FITS.
                     this_data_series = get_data_kepler(obsid)
@@ -121,12 +160,21 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
         if mission == "wuppe":
             this_data_series = mpl_get_data_wuppe(obsid)
 
-        # Append this DataSeries object to the list.
-        all_data_series.extend([this_data_series])
+        # Append this DataSeries object to the list.  Some IUE obsIDs (those
+        # that are double-aperture) return already as a list of DataSeries, so
+        # check whether it's a list or not before extending.
+        if not isinstance(this_data_series, list):
+            this_data_series = [this_data_series]
+        all_data_series.extend(this_data_series)
 
     # Return the list of DataSeries objects as a JSON string.
-    return json.dumps(all_data_series, ensure_ascii=False, check_circular=False,
-                      encoding="utf-8", default=json_encoder)
+    return_string = json.dumps(all_data_series, ensure_ascii=False,
+                               check_circular=False, encoding="utf-8",
+                               default=json_encoder)
+    if len(return_string) <= max_json_size:
+        return return_string
+    else:
+        return json_too_big_object(', '.join(missions), ', '.join(obsids))
 #--------------------
 
 #--------------------
@@ -170,6 +218,16 @@ def setup_args():
                         " Kepler cache files.  Do not specify this unless you"
                         " have a specific need to.  The default value should be"
                         " correct for most use cases.")
+
+    parser.add_argument("-f", "--filter", action="store", dest="filter",
+                        type=str, default=FILTER_DEFAULT, help="Some missions"
+                        " require additional data be specified beyond the"
+                        " observation ID to uniquely identify what spectrum to"
+                        " return (e.g., IUE).  The FILTER column is one"
+                        " parameter used in this case.  Missions that do not"
+                        " require the FILTER column to be specified will ignore"
+                        " this parameter, whether it is provided on input or"
+                        " not.")
 
     return parser
 #--------------------
