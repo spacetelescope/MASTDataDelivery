@@ -348,11 +348,11 @@ def get_data_iue(obsid):
     # this step will assign some of the error codes returned to the top level.
     parsed_files_result = parse_obsid_iue(obsid)
 
-    # These lists will store the spectral information for each data series.
-    all_plot_xunits = []
-    all_plot_yunits = []
-    all_plot_labels = []
-    all_plot_series = []
+    # In the case of low dispersion spectra, there can be two apertures for
+    # a single obsID.  In that case, we return a list of TWO DataSeries, one
+    # for each aperture.  In other words, we treat the single obsID as if it
+    # were two different obsIDs in the case of a double-aperture.
+    all_data_series = []
 
     # Until the client code can be updated, we can only return *one* plot series
     # for spectra, so for IUE double-dispersion obsIDs, only return the high
@@ -384,8 +384,6 @@ def get_data_iue(obsid):
                         dispersion = hdulist[0].header["disptype"]
                         # Get the aperture size(s) from the header.
                         apertures = hdulist[1].data["aperture"]
-                        if len(apertures) > 1:
-                            apertures = ['LARGE']
                         n_apertures = len(apertures)
                         # Number of spectral data points for each aperture size.
                         n_wls = [int(x) for x in hdulist[1].data["npoints"]]
@@ -413,14 +411,17 @@ def get_data_iue(obsid):
                             wlfls = [(x, y) for x, y in zip(wls, fls) if
                                      y != 0.]
                             if wlfls != []:
-                                all_plot_xunits.append(iue_xunit)
-                                all_plot_yunits.append(iue_yunit)
-                                all_plot_series.append([data_point(x=x, y=y) for
-                                                        x, y in wlfls])
-                                all_plot_labels.append(('IUE_' + obsid +
-                                                        ' DISP:' + dispersion +
-                                                        ' APER:' +
-                                                        apertures[aper]))
+                                # Create the return DataSeries object.
+                                all_data_series.append(
+                                    DataSeries('iue', obsid,
+                                               [[data_point(x=x, y=y) for x, y
+                                                 in wlfls]],
+                                               ['IUE_' + obsid + ' DISP:'
+                                                + dispersion + ' APER:' +
+                                                apertures[aper]],
+                                               [iue_xunit], [iue_yunit],
+                                               errcode))
+
                     if is_hi:
                         # Get the aperture from the primary header.
                         aperture = hdulist[0].header["aperture"].strip()
@@ -488,29 +489,30 @@ def get_data_iue(obsid):
                         comb_spec_reb = resample_spectrum(comb_spec, camera,
                                                           False)
 
-                        # Create the return structures.
-                        all_plot_xunits.append(iue_xunit)
-                        all_plot_yunits.append(iue_yunit)
-                        all_plot_series.append([data_point(x=x, y=y) for
-                                                x, y in comb_spec_reb])
-                        all_plot_labels.append('IUE_' + obsid + ' DISP:' +
-                                               dispersion + ' APER:' + aperture)
+                        # Create the return DataSeries object.
+                        all_data_series.append(
+                            DataSeries('iue', obsid,
+                                       [[data_point(x=x, y=y) for x, y
+                                         in comb_spec_reb]],
+                                       ['IUE_' + obsid + ' DISP:'
+                                        + dispersion + ' APER:' +
+                                        aperture],
+                                       [iue_xunit], [iue_yunit],
+                                       errcode))
+
             except IOError:
                 errcode = 3
-                all_plot_labels.append('')
-                all_plot_series.append([])
-                all_plot_xunits.append('')
-                all_plot_yunits.append('')
+                all_data_series.append(
+                    DataSeries('iue', obsid, [], [''], [''], [''], errcode))
 
-        # Create the return DataSeries object.
-        return_dataseries = DataSeries('iue', obsid, all_plot_series,
-                                       all_plot_labels,
-                                       all_plot_xunits, all_plot_yunits,
-                                       errcode)
     else:
         # This is where an error DataSeries object would be returned.
-        return_dataseries = DataSeries('iue', obsid, [], [], [], [],
-                                       parsed_files_result.errcode)
+        all_data_series.append(
+            DataSeries('iue', obsid, [], [], [],
+                       [], parsed_files_result.errcode))
     # Return the DataSeries object back to the calling module.
-    return return_dataseries
+    if len(all_data_series) == 1:
+        return all_data_series[0]
+    else:
+        return all_data_series
 #--------------------

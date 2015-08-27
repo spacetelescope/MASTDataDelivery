@@ -160,8 +160,12 @@ def deliver_data(missions, obsids, cache_dir=CACHE_DIR_DEFAULT):
         if mission == "wuppe":
             this_data_series = mpl_get_data_wuppe(obsid)
 
-        # Append this DataSeries object to the list.
-        all_data_series.extend([this_data_series])
+        # Append this DataSeries object to the list.  Some IUE obsIDs (those
+        # that are double-aperture) return already as a list of DataSeries, so
+        # check whether it's a list or not before extending.
+        if not isinstance(this_data_series, list):
+            this_data_series = [this_data_series]
+        all_data_series.extend(this_data_series)
 
     # Return the list of DataSeries objects as a JSON string.
     return_string = json.dumps(all_data_series, ensure_ascii=False,
