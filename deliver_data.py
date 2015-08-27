@@ -117,6 +117,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
                                      zip(missions, obsids)][k])
     missions = [missions[x] for x in sort_indexes]
     obsids = [obsids[x] for x in sort_indexes]
+    filters = [filters[x] for x in sort_indexes]
 
     # This defines the maximum allowed size of a return JSON string
     # (roughly in MB).
