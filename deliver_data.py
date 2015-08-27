@@ -111,10 +111,10 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
 
     # Make sure the input data are sorted based on the obsids, so that the
     # input is order-independent.
-    sort_indexes = sorted(range(len([x+'-'+y for x, y in
-                                     zip(missions, obsids)])), key=
-                          lambda k: [x+'-'+y for x, y in
-                                     zip(missions, obsids)][k])
+    sort_indexes = sorted(range(len([x+'-'+y+'-'+z for x, y, z in
+                                     zip(missions, obsids, filters)])), key=
+                          lambda k: [x+'-'+y+'-'+z for x, y, z in
+                                     zip(missions, obsids, filters)][k])
     missions = [missions[x] for x in sort_indexes]
     obsids = [obsids[x] for x in sort_indexes]
     filters = [filters[x] for x in sort_indexes]
