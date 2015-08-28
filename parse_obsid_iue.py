@@ -56,8 +56,13 @@ def parse_obsid_iue(obsid, filt):
     # Identify which file to return based on the FILTER requested.
     if filt == "LOW_DISP":
         file_to_return = mxlo_file
-    else:
+    elif filt == "HIGH_DISP":
         file_to_return = mxhi_file
+    elif filt == "UNKNOWN":
+        if os.path.isfile(mxhi_file):
+            file_to_return = mxhi_file
+        else:
+            file_to_return = mxlo_file
 
     if os.path.isfile(file_to_return):
         return parsed_values(errcode=error_code, specfiles=[file_to_return])

@@ -356,7 +356,9 @@ def get_data_iue(obsid, filt):
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    if filt.upper() in ["LOW_DISP", "HIGH_DISP"]:
+    if filt == ' ':
+        filt = "UNKNOWN"
+    if filt.upper() in ["LOW_DISP", "HIGH_DISP"] or filt == "UNKNOWN":
         parsed_files_result = parse_obsid_iue(obsid, filt.upper())
         errcode = parsed_files_result.errcode
     else:
