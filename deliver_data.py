@@ -32,6 +32,7 @@ CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "lightcurves" + os.path.sep + "cache" +
                      os.path.sep)
 FILTERS_DEFAULT = None
+URLS_DEFAULT = None
 
 #--------------------
 def json_encoder(obj):
@@ -72,7 +73,7 @@ def json_too_big_object(mission, obsid):
 
 
 #--------------------
-def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
+def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
                  cache_dir=CACHE_DIR_DEFAULT):
     """
     Given a list of mission + obsid strings, returns the lightcurve and/or
@@ -94,6 +95,11 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
 
     :param cache_dir: Directory containing Kepler cache files.
 
+    :param urls: The list of preview plot URLs for the observation ID, one per
+    'obsid'.
+
+    :type urls: list
+
     :type cache_dir: str
 
     :returns: JSON -- The lightcurve or spectral data from the requested data
@@ -105,19 +111,26 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
     if filters is None:
         filters = [' '] * len(missions)
 
+    # If the list of URLs is not supplied (because not all missions use it),
+    # then just default to a list of a single whitespace strings.
+    if urls is None:
+        urls = [' '] * len(missions)
+
     # The length of the 'missions' and 'obsids' lists must be equal.
     if len(missions) != len(obsids):
         raise IOError("Number of 'missions' must equal the number of 'obsids'.")
 
     # Make sure the input data are sorted based on the obsids, so that the
     # input is order-independent.
-    sort_indexes = sorted(range(len([x+'-'+y+'-'+z for x, y, z in
-                                     zip(missions, obsids, filters)])), key=
-                          lambda k: [x+'-'+y+'-'+z for x, y, z in
-                                     zip(missions, obsids, filters)][k])
+    sort_indexes = sorted(range(len([x+'-'+y+'-'+z+'-'+u for x, y, z, u in
+                                     zip(missions, obsids, filters, urls)])),
+                          key=
+                          lambda k: [x+'-'+y+'-'+z+'-'+u for x, y, z, u in
+                                     zip(missions, obsids, filters, urls)][k])
     missions = [missions[x] for x in sort_indexes]
     obsids = [obsids[x] for x in sort_indexes]
     filters = [filters[x] for x in sort_indexes]
+    urls = [urls[x] for x in sort_indexes]
 
     # This defines the maximum allowed size of a return JSON string
     # (roughly in MB).
@@ -127,7 +140,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT,
     # a list to store them all in.
     all_data_series = []
 
-    for mission, obsid, filt in zip(missions, obsids, filters):
+    for mission, obsid, filt, url in zip(missions, obsids, filters, urls):
         if mission == "befs":
             this_data_series = mpl_get_data_befs(obsid)
         if mission == "euve":
@@ -242,6 +255,17 @@ def setup_args():
                         " this parameter, whether it is provided on input or"
                         " not.")
 
+    parser.add_argument("-u", "--urls", action="store", dest="urls",
+                        type=str, nargs='+', default=URLS_DEFAULT,
+                        help="Some missions"
+                        " require additional data be specified beyond the"
+                        " observation ID to uniquely identify what spectrum to"
+                        " return (e.g., GALEX).  The preview URL column is one"
+                        " parameter used in this case.  Missions that do not"
+                        " require the URL column to be specified will ignore"
+                        " this parameter, whether it is provided on input or"
+                        " not.")
+
     return parser
 #--------------------
 
@@ -252,7 +276,7 @@ if __name__ == "__main__":
     ARGS = setup_args().parse_args()
 
     JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, filters=ARGS.filters,
-                               cache_dir=ARGS.cache_dir)
+                               urls=ARGS.urls, cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
