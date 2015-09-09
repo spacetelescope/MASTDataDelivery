@@ -8,6 +8,7 @@
 """
 
 import argparse
+from get_data_galex import get_data_galex
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_iue import get_data_iue
@@ -20,7 +21,6 @@ import os
 from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
 from mpl_get_data_fuse import mpl_get_data_fuse
-from mpl_get_data_galex import mpl_get_data_galex
 from mpl_get_data_hst import mpl_get_data_hst
 from mpl_get_data_hut import mpl_get_data_hut
 from mpl_get_data_tues import mpl_get_data_tues
@@ -152,7 +152,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
         if mission == "fuse":
             this_data_series = mpl_get_data_fuse(obsid)
         if mission == "galex":
-            this_data_series = mpl_get_data_galex(obsid)
+            this_data_series = get_data_galex(obsid, filt, url.strip())
         if mission == "hst":
             this_data_series = mpl_get_data_hst(obsid)
         if mission == "hut":
