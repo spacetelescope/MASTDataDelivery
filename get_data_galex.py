@@ -84,7 +84,6 @@ def get_data_galex(obsid, filt, url):
                     # the "OBJMDN" column for the spectral fluxes, which is only
                     # defined for visit-combined data.
                     fls_table = hdulist[1].data["objmdn"]
-
             except IOError:
                 errcode = 4
                 return_dataseries = DataSeries(
@@ -99,7 +98,7 @@ def get_data_galex(obsid, filt, url):
                     wls = [float(wl_zeroes[ind]+(i*wl_disp[ind])) for i in
                            range(npts[ind])]
                     # Construct the fluxes.
-                    fls = [float(fls_table[where_this_id[0], :][i]) for i in
+                    fls = [float(fls_table[ind, :][i]) for i in
                            range(npts[ind])]
                     wlfls = [x for x in zip(wls, fls)]
                     return_dataseries = DataSeries(
