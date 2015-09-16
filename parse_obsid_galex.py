@@ -8,17 +8,16 @@
 """
 
 import collections
-from glob import glob
 import os
 
 #--------------------
-def parse_obsid_galex(filt, url):
+def parse_obsid_galex(obsid, url):
     """
     Given an GALEX preview URL, return the FITS file to read.
 
-    :param filt: The filter for this GALEX observation ID.
+    :param obsid: The GALEX observation ID to retrieve the data from.
 
-    :type filt: str
+    :type obsid: str
 
     :param url: The URL for the preview jpg file.
 
@@ -50,19 +49,13 @@ def parse_obsid_galex(filt, url):
                      os.path.sep + "missions" + os.path.sep + "galex" +
                      os.path.sep +
                      os.path.sep.join(url.split(os.path.sep)[2:-3]) +
-                     os.path.sep)
-    if filt.upper() == "FUV":
-        spec_file = glob(file_location + "*-fg-gsp.fits.gz")
-    else:
-        spec_file = glob(file_location + "*-ng-gsp.fits.gz")
+                     os.path.sep + 'SSAP' + os.path.sep)
 
-    # There should be exactly one file, otherwise throw an error.
-    if len(spec_file) != 1:
-        error_code = 3
-        return parsed_values(errcode=error_code, specfiles=[''])
+    # The name of the FITS file is equal to the GALEX observation ID.
+    spec_file = file_location + obsid + ".fits"
 
-    if os.path.isfile(spec_file[0]):
-        return parsed_values(errcode=error_code, specfiles=[spec_file[0]])
+    if os.path.isfile(spec_file):
+        return parsed_values(errcode=error_code, specfiles=[spec_file])
     else:
         error_code = 2
         return parsed_values(errcode=error_code, specfiles=[''])

@@ -113,3 +113,20 @@ Test Case 18::
 
     gzip unit_test_reffiles/deliver_data/test_case_18.txt
 
+Test Case 19::
+
+    python deliver_data.py -m galex -o 2518748180271595520 -f NUV -u galex.stsci.edu/data/GR6/pipe/01-vsn/06051-CDFS_00/g/01-main/0001-img/07-try/qa/CDFS_00-xg-int_2color.jpg > unit_test_reffiles/deliver_data/test_case_19.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_19.txt
+
+Test Case 20::
+
+    python deliver_data.py -m galex -o 2518748180274763038 -f FUV -u galex.stsci.edu/data/GR6/pipe/01-vsn/06051-CDFS_00/g/01-main/0001-img/07-try/qa/spjpeg/CDFS_00_id021790-xg-gsp_spc.jpeg > unit_test_reffiles/deliver_data/test_case_20.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_20.txt
+
+Test Case 21::
+
+    python deliver_data.py -m galex -o 2505272565762628292 -f NUV -u galex.stsci.edu/data/GR7/pipe/01-vsn/05668-PTF10cwr/g/01-main/0001-img/07-try/qa/spjpeg/PTF10cwr_id006852-xg-gsp_spc.jpeg > unit_test_reffiles/deliver_data/test_case_21.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_21.txt
