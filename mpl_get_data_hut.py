@@ -58,10 +58,10 @@ def mpl_get_data_hut(obsid):
                                            errcode)
         else:
             # Wavelengths are the first list in the returned 3-element list.
-            wls = [float(x) for x in return_request[0][0]]
+            wls = [float("{0:.8f}".format(x)) for x in return_request[0][0]]
 
             # Fluxes are the second list in the returned 3-element list.
-            fls = [float(x) for x in return_request[1][0]]
+            fls = [float("{0:.8e}".format(x)) for x in return_request[1][0]]
 
             # This error code will be used unless there's a problem reading any
             # of the FITS files in the list.
