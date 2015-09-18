@@ -314,11 +314,12 @@ def resample_spectrum(combined_spectrum, camera, showplot=False):
         pyp.plot(wls, fls, '-ko')
         # Uncomment the lines below to overplot the (oversampled) interpolated
         # spectrum.
-        #if showplot:
-        #    pyp.plot(interpolated_wls, interpolated_fls, '-ro')
+        if showplot:
+            pyp.plot(interpolated_wls, interpolated_fls, '-ro')
         pyp.plot(binned_wls, binned_fls, '-go')
         for gapmark_ind in wl_gaps:
             pyp.axvline(wls[gapmark_ind])
+        pyp.suptitle("Red = Oversampled, Green = Resampled, Black = Original")
         pyp.show()
     return zip(binned_wls, binned_fls)
 #--------------------
