@@ -6,4 +6,4 @@ Detailed documentation about how DataDelivery treats data from a given mission i
 
 | Mission | Doc Link |
 | ------- | -------- |
-| IUE     | [DOC](docs/doc_iue.md?raw=true) |
+| IUE     | [DOC](docs/doc_iue.md) |
