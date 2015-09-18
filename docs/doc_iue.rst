@@ -37,4 +37,4 @@ Once the full set of wavelengths and fluxes are extracted, further selection is 
 
 After the wavelengths and fluxes with good quality flags are extracted for all the orders, they are order-combined into a single, contiguous array.  Given an order "m" and an adjacent order "m-1", the "cut wavelength" is calculated following Solano's Equation 1 and 2.  The cut wavelength depends on the camera that was used for that observation.  All points with wavelength wl1 <= the cut wavelength from order "m", and all points with wavelength wl2 > the cut wavelength from order "m-1" are kept.  The figure below demonstrates how the cut wavelength concept works for two orders.
 
-[IUE Order Combine Example](iue_ordercomb.png?raw=true)
+![IUE Order Combine Example](iue_ordercomb.png)
