@@ -37,12 +37,12 @@ Once the full set of wavelengths and fluxes are extracted, further selection is 
 
 After the wavelengths and fluxes with good quality flags are extracted for all the orders, they are order-combined into a single, contiguous array.  Given an order "m" and an adjacent order "m-1", the "cut wavelength" is calculated following Solano's Equation 1 and 2.  The cut wavelength depends on the camera that was used for that observation.  All points with wavelength wl1 <= the cut wavelength from order "m", and all points with wavelength wl2 > the cut wavelength from order "m-1" are kept.  The figure below demonstrates how the cut wavelength concept works for two orders.
 
-[IUE Order Combine Example](iue_ordercomb.png?raw=true)
+![IUE Order Combine Example](iue_ordercomb.png?raw=true)
 
 After the orders have been combined into a contiguous array, the spectrum is resampled onto a linear, evenly-spaced wavelength grid.  For the SWP camera the final bin size is set to 0.05 Angstroms, while the LWP and LWR camers use a final bin size of 0.10 Angstroms.  If there are any gaps in the spectrum (due to bad orders or other pieces that were not included due to bad quality flags) the spectrum is split into "subspectra" before creating the wavelength grids.  For each subspectrum, a grid of wavelengths are calculated, starting at the min. wavelength value and ending at the maximum wavelength value in the spectrum, where the wavelength spacing is the oversampled bin size.  The spectrum is then linearly interpolated onto this wavelength grid.  Then the interpolated subpsectrum is binned down by a factor of 10 to achieve the final, desired wavelength grid.  This is accomplished by taking the mean of each set of ten fluxes.  If the subspectrum is not a multiple of 10, NaN values are appended to the end of the subspectrum array.  The figure below demonstrates how the binning works.
 
-[IUE Linear Interpolation Example](iue_resample_inerp.png?raw=true)
+![IUE Linear Interpolation Example](iue_resample_interp.png?raw=true)
 
 The figure below shows how gaps in the spectra are **not** interpolated over (the blue vertical lines identify where a gap stars).
 
-[IUE Subspectrum Identification Example](iue_resample_subspec.png?raw=true)
+![IUE Subspectrum Identification Example](iue_resample_subspec.png?raw=true)
