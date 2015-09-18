@@ -168,9 +168,18 @@ def order_combine(order_spectra, camera, showplot=False):
 
         if showplot:
             import matplotlib.pyplot as pyp
-            pyp.plot(wls1, fls1, 'bo')
+            pyp.plot([x for x in wls1 if x <= cut_wl],
+                     [y for x, y in zip(wls1, fls1) if x <= cut_wl], 'bo')
+            pyp.plot([x for x in wls1 if x > cut_wl],
+                     [y for x, y in zip(wls1, fls1) if x > cut_wl], 'go')
             pyp.plot(wls2, fls2, 'ro')
+            pyp.plot([x for x in wls2 if x > cut_wl],
+                     [y for x, y in zip(wls2, fls2) if x > cut_wl], 'ro')
+            pyp.plot([x for x in wls2 if x <= cut_wl],
+                     [y for x, y in zip(wls2, fls2) if x <= cut_wl], 'yo')
             pyp.axvline(cut_wl)
+            pyp.suptitle('Blue = Order "m" (keep), Green = Order "m" (cut), Red'
+                         ' = Order "m-1" (keep), Yellow = Order "m-1" (cut)')
             pyp.show()
 
         # Keep those wavelengths from the two orders that don't cross the cut.
