@@ -2,7 +2,7 @@
 
 ## Description of GALEX Spectra Data Formats
 
-GALEX spectral data come in a many different stages of processing and a few different formats.  For the purposes of DataDelivery, only two of these files are relevant.  Both unextracted (two dimensional) grism spectra and extracted (one dimensional) spectra are available in the Portal.
+GALEX spectral data come in many different stages of processing and a few different formats.  For the purposes of DataDelivery, only two of these files are relevant.  Both unextracted (two dimensional) grism spectra and extracted (one dimensional) spectra are available in the Portal.
 
 ## Description of How DataDelivery Locates Data
 
