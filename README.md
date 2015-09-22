@@ -6,4 +6,5 @@ Detailed documentation about how DataDelivery treats data from a given mission i
 
 | Mission | Doc Link |
 | ------- | -------- |
+| GALEX   | [DOC](docs/doc_galex.md) |
 | IUE     | [DOC](docs/doc_iue.md) |
