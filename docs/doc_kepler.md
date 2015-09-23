@@ -19,7 +19,7 @@ DataDelivery relies on parsing of the observation ID to determine which files to
 
 ## Description of Data Processing
 
-Once a set of files is located for a given target+cadence+Quarter, each FITS file is read in to obtain arrays of times and fluxes.  The data are stored as a data table in the first FITS extension.  The time stamps are stored in a truncated BJD format, where the full barycentric Julian date is given by:
+Once a set of files is located for a given target+cadence+Quarter, each FITS file is opened to obtain arrays of times and fluxes.  The data are stored as a data table in the first FITS extension.  The time stamps are stored in a truncated BJD format, where the full barycentric Julian date is given by:
 
     BJD[i] = BJDREFI + BJDREFF + TIME[i]
 

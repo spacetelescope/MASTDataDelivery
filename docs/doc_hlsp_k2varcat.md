@@ -4,7 +4,7 @@
 
 HLSP_K2VARCAT are high level science products contributed by David Armstrong (at the time, a research fellow at University of Warwick).  The MAST HLSP page is located at https://archive.stsci.edu/prepds/k2varcat/.  Not every K2 target has a K2VARCAT lightcurve: only those *long cadence* sources that the team found to be variable are included in K2VARCAT.  The extracted, detrended lightcurves are stored in FITS files, one per K2 target.  For each target, there are **two** different fluxes available:  an **extracted** and a **detrended**.  The first is extracted but not detrended, while the second was extracted and had thruster firings and other systematics mitigated.
 
-The first FITS extension contains a data table that has the time stamps and fluxes.  The second extensions contains the aperture mask used to extract the fluxes, but this is not used by DataDelivery.
+The first FITS extension contains a data table that has the time stamps and fluxes.  The second extension contains the aperture mask used to extract the fluxes, but this is not used by DataDelivery.
 
 ## Description of How DataDelivery Locates Data
 
@@ -28,6 +28,6 @@ Once the FITS file is located on disk, the time stamps, extracted fluxes, and de
 
     BJD[i] = BJD_REF + TIME[i]
 
-In the above formula, "BJD_REF" is the truncated value to add to the time stamps.  This is located in the header card value "TUNIT1" in the first FITS extension.  "TIME" is the array of truncated BJD time stamps, stored as a column in the first extension's data table.
+In the above formula, "BJD_REF" is the truncated value to add to the time stamps.  This is extracted as a substring from the header card value "TUNIT1" in the first FITS extension.  "TIME" is the array of truncated BJD time stamps, stored as a column in the first extension's data table.
 
 Similarly, the **extracted** and **detrended** fluxes are stored as columns in the data table in the first FITS extension, named "APTFLUX" and "DETFLUX", respectively.  No additional processing is performed on the fluxes, and no filtering based on quality flags or other selection criteria is performed.
