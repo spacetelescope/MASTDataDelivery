@@ -12,6 +12,8 @@ In the above formula, EPIC_ID is the ID number from the EPIC catalog, CAMPAIGN_N
 
     ktwo205901354-c03_lc
 
+Note: Campaigns 0-2 do not (as of 23 Sept. 2015) have extracted lightcurves provided by the mission.
+
 ## Description of How DataDelivery Locates Data
 
 DataDelivery relies on parsing of the observation ID to determine which files to look for, and where to locate them on disk.  A variety of sanity checks (with associated error codes in the returned JSON object) are conducted on the observation ID to ensure it is properly parsed and the values DataDelivery finds within the observation ID are within expected parameters.
