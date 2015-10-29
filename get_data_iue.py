@@ -425,11 +425,14 @@ def get_data_iue(obsid, filt):
                             wlfls = [(x, y) for x, y in zip(wls, fls) if
                                      y != 0.]
                             if wlfls != []:
+                                datapoints = [
+                                    [data_point(x=float("{0:.8f}".format(x)),
+                                                y=float("{0:.8e}".format(y)))
+                                     for x, y in wlfls]]
                                 # Create the return DataSeries object.
                                 all_data_series.append(
                                     DataSeries('iue', obsid,
-                                               [[data_point(x=x, y=y) for x, y
-                                                 in wlfls]],
+                                               datapoints,
                                                ['IUE_' + obsid + ' DISP:'
                                                 + dispersion + ' APER:' +
                                                 apertures[aper]],
@@ -504,10 +507,13 @@ def get_data_iue(obsid, filt):
                                                           False)
 
                         # Create the return DataSeries object.
+                        datapoints = [
+                            [data_point(x=float("{0:.8f}".format(x)),
+                                        y=float("{0:.8e}".format(y)))
+                             for x, y in comb_spec_reb]]
                         all_data_series.append(
                             DataSeries('iue', obsid,
-                                       [[data_point(x=x, y=y) for x, y
-                                         in comb_spec_reb]],
+                                       datapoints,
                                        ['IUE_' + obsid + ' DISP:'
                                         + dispersion + ' APER:' +
                                         aperture],
