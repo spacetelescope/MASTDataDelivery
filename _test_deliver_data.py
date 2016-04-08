@@ -239,11 +239,58 @@ class TestGetDataKepler(unittest.TestCase):
         self.assertEqual(old_str, new_str)
 
     # Test Case 18 = K2
+
     def test_case18(self):
         """ Test of K2 extracted lightcurves (from mission). """
         new_str = deliver_data.deliver_data(
             ["k2"], ["ktwo205896873-c03_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_18.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    # Test Cases 19-21 = GALEX
+
+    def test_case19(self):
+        """ Test of GALEX 2D spectral image (should return error JSON). """
+        new_str = deliver_data.deliver_data(
+            ["galex"], ["2518748180271595520"], filters=['NUV'],
+            urls=[("galex.stsci.edu/data/GR6/pipe/01-vsn/06051-CDFS_00/g/01-"
+                   "main/0001-img/07-try/qa/CDFS_00-xg-int_2color.jpg")])
+        old_file = self.reference_file_path + "test_case_19.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case20(self):
+        """ Test of GALEX 1D FUV extracted spectrum. """
+        new_str = deliver_data.deliver_data(
+            ["galex"], ["2518748180274763038"], filters=['FUV'],
+            urls=[("galex.stsci.edu/data/GR6/pipe/01-vsn/06051-CDFS_00/g/"
+                   "01-main/0001-img/07-try/qa/spjpeg/"
+                   "CDFS_00_id021790-xg-gsp_spc.jpeg")])
+        old_file = self.reference_file_path + "test_case_20.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case21(self):
+        """ Test of GALEX 1D NUV extracted spectrum. """
+        new_str = deliver_data.deliver_data(
+            ["galex"], ["2505272565762628292"], filters=['NUV'],
+            urls=[("galex.stsci.edu/data/GR7/pipe/01-vsn/05668-PTF10cwr/g/"
+                   "01-main/0001-img/07-try/qa/spjpeg/"
+                   "PTF10cwr_id006852-xg-gsp_spc.jpeg")])
+        old_file = self.reference_file_path + "test_case_21.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:
                 old_str = oldfile.readlines()[0].strip()

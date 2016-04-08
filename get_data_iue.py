@@ -168,9 +168,18 @@ def order_combine(order_spectra, camera, showplot=False):
 
         if showplot:
             import matplotlib.pyplot as pyp
-            pyp.plot(wls1, fls1, 'bo')
+            pyp.plot([x for x in wls1 if x <= cut_wl],
+                     [y for x, y in zip(wls1, fls1) if x <= cut_wl], 'bo')
+            pyp.plot([x for x in wls1 if x > cut_wl],
+                     [y for x, y in zip(wls1, fls1) if x > cut_wl], 'go')
             pyp.plot(wls2, fls2, 'ro')
+            pyp.plot([x for x in wls2 if x > cut_wl],
+                     [y for x, y in zip(wls2, fls2) if x > cut_wl], 'ro')
+            pyp.plot([x for x in wls2 if x <= cut_wl],
+                     [y for x, y in zip(wls2, fls2) if x <= cut_wl], 'yo')
             pyp.axvline(cut_wl)
+            pyp.suptitle('Blue = Order "m" (keep), Green = Order "m" (cut), Red'
+                         ' = Order "m-1" (keep), Yellow = Order "m-1" (cut)')
             pyp.show()
 
         # Keep those wavelengths from the two orders that don't cross the cut.
@@ -305,11 +314,12 @@ def resample_spectrum(combined_spectrum, camera, showplot=False):
         pyp.plot(wls, fls, '-ko')
         # Uncomment the lines below to overplot the (oversampled) interpolated
         # spectrum.
-        #if showplot:
-        #    pyp.plot(interpolated_wls, interpolated_fls, '-ro')
+        if showplot:
+            pyp.plot(interpolated_wls, interpolated_fls, '-ro')
         pyp.plot(binned_wls, binned_fls, '-go')
         for gapmark_ind in wl_gaps:
             pyp.axvline(wls[gapmark_ind])
+        pyp.suptitle("Red = Oversampled, Green = Resampled, Black = Original")
         pyp.show()
     return zip(binned_wls, binned_fls)
 #--------------------
@@ -415,11 +425,14 @@ def get_data_iue(obsid, filt):
                             wlfls = [(x, y) for x, y in zip(wls, fls) if
                                      y != 0.]
                             if wlfls != []:
+                                datapoints = [
+                                    [data_point(x=float("{0:.8f}".format(x)),
+                                                y=float("{0:.8e}".format(y)))
+                                     for x, y in wlfls]]
                                 # Create the return DataSeries object.
                                 all_data_series.append(
                                     DataSeries('iue', obsid,
-                                               [[data_point(x=x, y=y) for x, y
-                                                 in wlfls]],
+                                               datapoints,
                                                ['IUE_' + obsid + ' DISP:'
                                                 + dispersion + ' APER:' +
                                                 apertures[aper]],
@@ -494,10 +507,13 @@ def get_data_iue(obsid, filt):
                                                           False)
 
                         # Create the return DataSeries object.
+                        datapoints = [
+                            [data_point(x=float("{0:.8f}".format(x)),
+                                        y=float("{0:.8e}".format(y)))
+                             for x, y in comb_spec_reb]]
                         all_data_series.append(
                             DataSeries('iue', obsid,
-                                       [[data_point(x=x, y=y) for x, y
-                                         in comb_spec_reb]],
+                                       datapoints,
                                        ['IUE_' + obsid + ' DISP:'
                                         + dispersion + ' APER:' +
                                         aperture],
