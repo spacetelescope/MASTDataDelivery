@@ -130,3 +130,15 @@ Test Case 21::
     python deliver_data.py -m galex -o 2505272565762628292 -f NUV -u galex.stsci.edu/data/GR7/pipe/01-vsn/05668-PTF10cwr/g/01-main/0001-img/07-try/qa/spjpeg/PTF10cwr_id006852-xg-gsp_spc.jpeg > unit_test_reffiles/deliver_data/test_case_21.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_21.txt
+
+Test Case 22::
+
+    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC1D.FITS
+
+    gzip unit_test_reffiles/deliver_data/test_case_22.txt
+
+Test Case 23::
+
+    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC2D.FITS
+
+    gzip unit_test_reffiles/deliver_data/test_case_23.txt

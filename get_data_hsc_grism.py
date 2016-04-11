@@ -64,9 +64,12 @@ def get_data_hsc_grism(obsid):
                 wlfls = [x for x in zip(wls, fls)]
                 return_dataseries = DataSeries(
                     'hsc_grism', obsid,
-                    [[data_point(x=x, y=y) for x, y in wlfls]],
+                    [[data_point(x=float("{0:.8e}".format(x)),
+                                 y=float("{0:.8e}".format(y)))
+                      for x, y in wlfls]],
                     [obsid],
-                    [hsc_grism_xunit], [hsc_grism_yunit], errcode)
+                    [hsc_grism_xunit], [hsc_grism_yunit],
+                    errcode)
     else:
         # This is where an error DataSeries object would be returned.
         return_dataseries = DataSeries(

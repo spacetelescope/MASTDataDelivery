@@ -37,7 +37,7 @@ def parse_obsid_hsc_grism(obsid):
 
     # Check if this is a 2D spectral image.  The signpost is the presence of
     # an extension ".spec2d.fits".
-    if obsid[-12:] == ".spec2d.fits":
+    if obsid[-12:].lower() == ".spec2d.fits":
         error_code = 1
         return parsed_values(errcode=error_code, specfiles=[''])
 
