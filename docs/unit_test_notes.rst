@@ -133,12 +133,18 @@ Test Case 21::
 
 Test Case 22::
 
-    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC1D.FITS
+    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC1D.FITS > unit_test_reffiles/deliver_data/test_case_22.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_22.txt
 
 Test Case 23::
 
-    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC2D.FITS
+    python deliver_data.py -m hsc_grism -o HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC2D.FITS > unit_test_reffiles/deliver_data/test_case_23.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_23.txt
+
+Test Case 24::
+
+    python deliver_data.py -m hlsp_k2sc -o k2sc200004923-c03_lc > unit_test_reffiles/deliver_data/test_case_24.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_24.txt
