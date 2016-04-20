@@ -6,10 +6,10 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-import deliver_data
+import gzip
 import os
 import unittest
-import gzip
+import deliver_data
 
 #--------------------
 
@@ -291,6 +291,42 @@ class TestGetDataKepler(unittest.TestCase):
                    "01-main/0001-img/07-try/qa/spjpeg/"
                    "PTF10cwr_id006852-xg-gsp_spc.jpeg")])
         old_file = self.reference_file_path + "test_case_21.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case22(self):
+        """ Test of HLA/HSC extracted grism spectrum. """
+        new_str = deliver_data.deliver_data(
+            ["hsc_grism"], ["HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC1D.FITS"])
+        old_file = self.reference_file_path + "test_case_22.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case23(self):
+        """ Test of HLA/HSC 2D grism spectrum - handle it's unsupported. """
+        new_str = deliver_data.deliver_data(
+            ["hsc_grism"], ["HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC2D.FITS"])
+        old_file = self.reference_file_path + "test_case_23.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case24(self):
+        """ This uses EPIC 200004923 from Campaign 3. """
+        new_str = deliver_data.deliver_data(
+            ["hlsp_k2sc"], ["k2sc200004923-c03_lc"], filters=["k2"])
+        old_file = self.reference_file_path + "test_case_24.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
