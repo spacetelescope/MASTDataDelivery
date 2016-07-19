@@ -5,12 +5,13 @@
 HLSP_K2EVEREST are high level science products contributed by Rodrigo Luger (at the time, a graduate student at the Univ. of Washington).  The MAST HLSP page is located at https://archive.stsci.edu/prepds/k2everest/.  Not every K2 target has a K2EVEREST lightcurve, for example, short cadence targets are not included in K2EVEREST.  The extracted, detrended lightcurves are stored in FITS files, one per K2 target.  Each target has both a **raw** and **corrected** version of the fluxes available, where the **corrected** fluxes have thruster firings and other systematics mitigated.
 
 The FITS file has 5 extensions: the primary HDU with just a header, the data extension with the de-trended light curve, an extension with the coefficients for the linear model, an extension with the design matrix used in the linear model, and an image extension with the aperture used. The data extension (first extension) consists of the following columns:
-    TIME - the time array (identical to input array from the K2 TPFs)
-    FLUX - the de-trended flux array, in e-/s
-    OUTLIER - an outlier mask. 0 if data point was used in the de-trending, 1 if it was masked as an outlier
-    BKG_FLUX - the background flux we computed for campaigns 0,1, and 2. For the other campaigns this is zero, since the background is already pre-subtracted in the TPFs
-    RAW_FLUX - the raw SAP flux in the aperture we used
-    RAW_FERR - the raw SAP flux error
+
+* TIME - the time array (identical to input array from the K2 TPFs)
+* FLUX - the de-trended flux array, in e-/s
+* OUTLIER - an outlier mask. 0 if data point was used in the de-trending, 1 if it was masked as an outlier
+* BKG_FLUX - the background flux we computed for campaigns 0,1, and 2. For the other campaigns this is zero, since the background is already pre-subtracted in the TPFs
+* RAW_FLUX - the raw SAP flux in the aperture we used
+* RAW_FERR - the raw SAP flux error
 
 ## Description of How DataDelivery Locates Data
 
