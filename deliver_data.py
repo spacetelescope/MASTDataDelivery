@@ -8,8 +8,11 @@
 """
 
 import argparse
+import json
+import os
 from data_series import DataSeries
 from get_data_galex import get_data_galex
+from get_data_hlsp_k2everest import get_data_hlsp_k2everest
 from get_data_hlsp_k2sc import get_data_hlsp_k2sc
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
@@ -17,8 +20,6 @@ from get_data_hsc_grism import get_data_hsc_grism
 from get_data_iue import get_data_iue
 from get_data_k2 import get_data_k2
 from get_data_kepler import get_data_kepler
-import json
-import os
 
 from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
@@ -151,6 +152,8 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
             this_data_series = mpl_get_data_fuse(obsid)
         if mission == "galex":
             this_data_series = get_data_galex(obsid, filt, url.strip())
+        if mission == "hlsp_k2everest":
+            this_data_series = get_data_hlsp_k2everest(obsid)
         if mission == "hlsp_k2sc":
             this_data_series = get_data_hlsp_k2sc(obsid)
         if mission == "hlsp_k2sff":
@@ -225,6 +228,7 @@ def setup_args():
                                  'euve',
                                  'fuse',
                                  'galex',
+                                 'hlsp_k2everest',
                                  'hlsp_k2sc',
                                  'hlsp_k2sff',
                                  'hlsp_k2varcat',
