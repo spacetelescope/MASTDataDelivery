@@ -7,6 +7,7 @@
 """
 
 import collections
+import numpy
 from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_hlsp_k2everest import parse_obsid_hlsp_k2everest
@@ -31,6 +32,7 @@ def get_data_hlsp_k2everest(obsid):
     From this module:
     4 = FITS file does not have the expected number of FITS extensions.
     5 = Could not open FITS file for reading.
+    6 = All values were non-finite in x and/or y.
     """
 
     # This defines a data point for a DataSeries object as a namedtuple.
@@ -63,17 +65,30 @@ def get_data_hlsp_k2everest(obsid):
                     # "best" aperture from the 20, then 2 - 21 are the 20 used.
                     if len(hdulist) == 5:
                         # Timestamps.
-                        bjd = [float(x) for x in
+                        bjd = numpy.asarray([float(x) for x in
                                (float(hdulist[1].header["BJDREFI"]) +
                                 hdulist[1].header["BJDREFF"] +
-                                hdulist[1].data["TIME"])]
-
+                                hdulist[1].data["TIME"])])
                         # Raw flux.
-                        raw_flux = [float("{0:.8f}".format(x)) for x in
-                                    hdulist[1].data["RAW_FLUX"]]
+                        raw_flux = numpy.asarray(
+                            [float("{0:.8f}".format(x)) for x in
+                             hdulist[1].data["RAW_FLUX"]])
                         # Corrected flux.
-                        cor_flux = [float("{0:.8f}".format(x)) for x in
-                                    hdulist[1].data["FLUX"]]
+                        cor_flux = numpy.asarray(
+                            [float("{0:.8f}".format(x)) for x in
+                             hdulist[1].data["FLUX"]])
+
+                        # Only keep those points that don't have NaN's in them.
+                        where_keep = numpy.where(
+                            (numpy.isfinite(bjd)) &
+                            (numpy.isfinite(raw_flux)) &
+                            (numpy.isfinite(cor_flux)))[0]
+                        if len(where_keep) > 0:
+                            bjd = bjd[where_keep]
+                            raw_flux = raw_flux[where_keep]
+                            cor_flux = cor_flux[where_keep]
+                        else:
+                            errcode = 6
 
                         # Create the plot label and plot series for the
                         # extracted and detrended fluxes.
@@ -81,22 +96,29 @@ def get_data_hlsp_k2everest(obsid):
                             'K2EVEREST_' + parsed_file_result.k2everestid +
                             ' ' + parsed_file_result.campaign.upper())
 
-                        # Note that the indexes are (j-1) since j loops
-                        # over the extension number, but the lists are
-                        # zero-indexed, so "k" is the insert index.
-                        all_plot_labels[0] = (this_plot_label +
-                                              ' Raw')
-                        all_plot_series[0] = [data_point(x=x, y=y) for
-                                              x, y in zip(bjd, raw_flux)]
-                        all_plot_xunits[0] = k2everest_xunit
-                        all_plot_yunits[0] = k2everest_yunit
-                        all_plot_labels[1] = (this_plot_label +
-                                              ' Corrected')
-                        all_plot_series[1] = [data_point(x=x, y=y) for
-                                              x, y in zip(bjd,
-                                                          cor_flux)]
-                        all_plot_xunits[1] = k2everest_xunit
-                        all_plot_yunits[1] = k2everest_yunit
+                        if errcode == 0:
+                            all_plot_labels[0] = (this_plot_label +
+                                                  ' Raw')
+                            all_plot_series[0] = [data_point(x=x, y=y) for
+                                                  x, y in zip(bjd, raw_flux)]
+                            all_plot_xunits[0] = k2everest_xunit
+                            all_plot_yunits[0] = k2everest_yunit
+                            all_plot_labels[1] = (this_plot_label +
+                                                  ' Corrected')
+                            all_plot_series[1] = [data_point(x=x, y=y) for
+                                                  x, y in zip(bjd,
+                                                              cor_flux)]
+                            all_plot_xunits[1] = k2everest_xunit
+                            all_plot_yunits[1] = k2everest_yunit
+                        else:
+                            all_plot_labels[0] = ''
+                            all_plot_series[0] = []
+                            all_plot_xunits[0] = ''
+                            all_plot_yunits[0] = ''
+                            all_plot_labels[1] = ''
+                            all_plot_series[1] = []
+                            all_plot_xunits[1] = ''
+                            all_plot_yunits[1] = ''
                     else:
                         # Then there aren't the expected number of extensions.
                         errcode = 4
