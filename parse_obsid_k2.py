@@ -48,6 +48,12 @@ def parse_obsid_k2(obsid):
         return parsed_values(k2id='', cadence='', campaign='',
                              errcode=error_code, files=[''])
 
+    # If Campaign 10, then the light curves live in the Campaign 10-2 subdir
+    # (there are none from Campaign 10-1), so we have to translate the Campaign
+    # number.
+    if campaign == 'c10':
+        campaign = 'c102'
+
     # The part of the directory with the campaign number is *not* zero-padded.
     campaign_subdir = 'c'+'{0:2d}'.format(int(campaign[1:])).strip()
 
