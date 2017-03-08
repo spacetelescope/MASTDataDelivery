@@ -17,6 +17,7 @@ from get_data_hlsp_k2sc import get_data_hlsp_k2sc
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
 from get_data_hsc_grism import get_data_hsc_grism
+from get_data_hsla import get_data_hsla
 from get_data_iue import get_data_iue
 from get_data_k2 import get_data_k2
 from get_data_kepler import get_data_kepler
@@ -35,6 +36,7 @@ CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "lightcurves" + os.path.sep + "cache" +
                      os.path.sep)
 FILTERS_DEFAULT = None
+TARGET_DEFAULT = None
 URLS_DEFAULT = None
 
 #--------------------
@@ -77,7 +79,7 @@ def json_too_big_object(mission, obsid):
 
 #--------------------
 def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
-                 cache_dir=CACHE_DIR_DEFAULT):
+                 targets=TARGET_DEFAULT, cache_dir=CACHE_DIR_DEFAULT):
     """
     Given a list of mission + obsid strings, returns the lightcurve and/or
     spectral data from each of them.
@@ -103,6 +105,10 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
 
     :type urls: list
 
+    :param targets: The list of target names, one per 'obsid'.
+
+    :type targets: list
+
     :type cache_dir: str
 
     :returns: JSON -- The lightcurve or spectral data from the requested data
@@ -110,14 +116,23 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
     """
 
     # If the list of filters is not supplied (because not all missions use it),
-    # then just default to a list of a single whitespace strings.
+    # then just default to a list of single whitespace strings.
     if filters is None:
         filters = [' '] * len(missions)
 
     # If the list of URLs is not supplied (because not all missions use it),
-    # then just default to a list of a single whitespace strings.
+    # then just default to a list of single whitespace strings.
     if urls is None:
         urls = [' '] * len(missions)
+
+    # If the list of targets is not supplied (because not all missions use it),
+    # then just default to a list of single whitespace strings.
+    if targets is None:
+        targets = [' '] * len(missions)
+
+    # There must be something supplied for 'mission' and 'obsid' supplied.
+    if missions is None or obsids is None:
+        raise IOError("Both 'missions' and 'obsids' must be supplied.")
 
     # The length of the 'missions' and 'obsids' lists must be equal.
     if len(missions) != len(obsids):
@@ -134,6 +149,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
     obsids = [obsids[x] for x in sort_indexes]
     filters = [filters[x] for x in sort_indexes]
     urls = [urls[x] for x in sort_indexes]
+    targets = [targets[x] for x in sort_indexes]
 
     # This defines the maximum allowed size of a return JSON string
     # (roughly in MB).
@@ -143,7 +159,8 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
     # a list to store them all in.
     all_data_series = []
 
-    for mission, obsid, filt, url in zip(missions, obsids, filters, urls):
+    for mission, obsid, filt, url, targ in zip(missions, obsids, filters,
+                                               urls, targets):
         if mission == "befs":
             this_data_series = mpl_get_data_befs(obsid)
         if mission == "euve":
@@ -162,6 +179,8 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
             this_data_series = get_data_hlsp_k2varcat(obsid)
         if mission == "hsc_grism":
             this_data_series = get_data_hsc_grism(obsid)
+        if mission == "hsla":
+            this_data_series = get_data_hsla(obsid, targ)
         if mission == "hst":
             this_data_series = mpl_get_data_hst(obsid)
         if mission == "hut":
@@ -233,6 +252,7 @@ def setup_args():
                                  'hlsp_k2sff',
                                  'hlsp_k2varcat',
                                  'hsc_grism',
+                                 'hsla',
                                  'hst',
                                  'hut',
                                  'iue',
@@ -267,6 +287,16 @@ def setup_args():
                         " this parameter, whether it is provided on input or"
                         " not.")
 
+    parser.add_argument("-t", "--target", action="store", dest="target",
+                        type=str, nargs="+", default=TARGET_DEFAULT,
+                        help="Some missions require additional data to be"
+                        " specified beyond the observation ID to uniquely"
+                        " identify what spectrum to return. The TARGET column"
+                        " is one parameter used in this case.  Missions that do"
+                        " not require the TARGET column to be specified will"
+                        " ignore this parameter, whether it is provided on"
+                        " input or not.")
+
     parser.add_argument("-u", "--urls", action="store", dest="urls",
                         type=str, nargs='+', default=URLS_DEFAULT,
                         help="Some missions"
@@ -288,7 +318,8 @@ if __name__ == "__main__":
     ARGS = setup_args().parse_args()
 
     JSON_STRING = deliver_data(ARGS.missions, ARGS.obsids, filters=ARGS.filters,
-                               urls=ARGS.urls, cache_dir=ARGS.cache_dir)
+                               urls=ARGS.urls, targets=ARGS.target,
+                               cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
     print JSON_STRING
