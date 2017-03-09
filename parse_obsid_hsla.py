@@ -62,6 +62,8 @@ def parse_obsid_hsla(obsid, targ):
     # for the "coadd" FITS files, otherwise we look for the Obs ID target.
     if obsid.lower().strip() == "hsla_coadd":
         spec_files = glob(file_location + "*coadd*.fits.gz")
+        # Sort them for reproducibility and unit testing purposes.
+        spec_files.sort()
         if len(spec_files) > 0:
             return parsed_values(errcode=error_code, specfiles=spec_files)
         else:
