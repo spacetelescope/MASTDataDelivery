@@ -91,9 +91,9 @@ def get_data_hlsp_k2everest(obsid):
                             # Get arrays into regular list with decimal limits.
                             bjd = [float("{0:.8f}".format(x)) for x in bjd]
                             raw_flux = [float("{0:.8f}".format(x))
-                                              for x in raw_flux]
+                                        for x in raw_flux]
                             cor_flux = [float("{0:.8f}".format(x))
-                                              for x in cor_flux]
+                                        for x in cor_flux]
                             all_plot_labels[0] = (this_plot_label +
                                                   ' Raw')
                             all_plot_series[0] = [data_point(x=x, y=y) for
