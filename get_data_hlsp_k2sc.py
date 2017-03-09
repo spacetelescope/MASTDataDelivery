@@ -7,6 +7,7 @@
 """
 
 import collections
+import numpy
 from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_hlsp_k2sc import parse_obsid_hlsp_k2sc
@@ -31,6 +32,7 @@ def get_data_hlsp_k2sc(obsid):
     From this module:
     4 = FITS file does not have the expected number of FITS extensions.
     5 = Could not open FITS file for reading.
+    6 = All values were non-finite in x and/or y.
     """
 
     # This defines a data point for a DataSeries object as a namedtuple.
@@ -67,13 +69,27 @@ def get_data_hlsp_k2sc(obsid):
                             extname = hdulist[j].header["EXTNAME"].strip()
 
                             # Timestamps.
-                            bjd = [float("{0:.8f}".format(
-                                x + 2454833.0)) for x in
-                                   hdulist[j].data["time"]]
+                            bjd = hdulist[j].data["time"] + 2454833.0
+#                            bjd = [float("{0:.8f}".format(
+#                                x + 2454833.0)) for x in
+#                                   hdulist[j].data["time"]]
 
                             # Corrected flux.
-                            cor_flux = [float("{0:.8f}".format(x)) for x in
-                                        hdulist[j].data["flux"]]
+                            cor_flux = hdulist[j].data["flux"]
+#                            cor_flux = [float("{0:.8f}".format(x)) for x in
+#                                        hdulist[j].data["flux"]]
+
+
+                            # Only keep those points that don't have NaN's in
+                            # them.
+                            where_keep = numpy.where(
+                                (numpy.isfinite(bjd)) &
+                                (numpy.isfinite(cor_flux)))[0]
+                            if len(where_keep) > 0:
+                                bjd = bjd[where_keep]
+                                cor_flux = cor_flux[where_keep]
+                            else:
+                                errcode = 6
 
                             # Create the plot label and plot series for the
                             # extracted and detrended fluxes.
@@ -85,12 +101,24 @@ def get_data_hlsp_k2sc(obsid):
                             # Note that the indexes are (j-1) since j loops
                             # over the extension number, but the lists are
                             # zero-indexed, so "k" is the insert index.
-                            k = j-1
-                            all_plot_labels[k] = this_plot_label
-                            all_plot_series[k] = [data_point(x=x, y=y) for
-                                                  x, y in zip(bjd, cor_flux)]
-                            all_plot_xunits[k] = k2sc_xunit
-                            all_plot_yunits[k] = k2sc_yunit
+                            if errcode == 0:
+                                # Get arrays into regular list with decimal
+                                # limits.
+                                bjd = [float("{0:.8f}".format(x)) for x in bjd]
+                                cor_flux = [float("{0:.8f}".format(x))
+                                            for x in cor_flux]
+                                k = j-1
+                                all_plot_labels[k] = this_plot_label
+                                all_plot_series[k] = [
+                                    data_point(x=x, y=y) for
+                                    x, y in zip(bjd, cor_flux)]
+                                all_plot_xunits[k] = k2sc_xunit
+                                all_plot_yunits[k] = k2sc_yunit
+                            else:
+                                all_plot_labels[k] = ''
+                                all_plot_series[k] = []
+                                all_plot_xunits[k] = ''
+                                all_plot_yunits[k] = ''
                     else:
                         # Then there aren't the expected number of extensions.
                         errcode = 4

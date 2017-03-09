@@ -62,18 +62,13 @@ def get_data_hlsp_k2everest(obsid):
                     # Extract time stamps and relevant fluxes.
                     if len(hdulist) == 6:
                         # Timestamps.
-                        bjd = numpy.asarray([float("{0:.8f}".format(x)) for x in
-                               (float(hdulist[1].header["BJDREFI"]) +
-                                hdulist[1].header["BJDREFF"] +
-                                hdulist[1].data["TIME"])])
+                        bjd = (hdulist[1].data["TIME"] +
+                               hdulist[1].header["BJDREFF"] +
+                               hdulist[1].header["BJDREFI"])
                         # Raw flux.
-                        raw_flux = numpy.asarray(
-                            [float("{0:.8f}".format(x)) for x in
-                             hdulist[1].data["FRAW"]])
+                        raw_flux = hdulist[1].data["FRAW"]
                         # Corrected flux.
-                        cor_flux = numpy.asarray(
-                            [float("{0:.8f}".format(x)) for x in
-                             hdulist[1].data["FCOR"]])
+                        cor_flux = hdulist[1].data["FCOR"]
                         # Only keep those points that don't have NaN's in them.
                         where_keep = numpy.where(
                             (numpy.isfinite(bjd)) &
@@ -93,6 +88,12 @@ def get_data_hlsp_k2everest(obsid):
                             ' ' + parsed_file_result.campaign.upper())
 
                         if errcode == 0:
+                            # Get arrays into regular list with decimal limits.
+                            bjd = [float("{0:.8f}".format(x)) for x in bjd]
+                            raw_flux = [float("{0:.8f}".format(x))
+                                              for x in raw_flux]
+                            cor_flux = [float("{0:.8f}".format(x))
+                                              for x in cor_flux]
                             all_plot_labels[0] = (this_plot_label +
                                                   ' Raw')
                             all_plot_series[0] = [data_point(x=x, y=y) for
