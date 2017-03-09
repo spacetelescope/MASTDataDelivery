@@ -62,7 +62,7 @@ def get_data_hlsp_k2everest(obsid):
                     # Extract time stamps and relevant fluxes.
                     if len(hdulist) == 6:
                         # Timestamps.
-                        bjd = numpy.asarray([float(x) for x in
+                        bjd = numpy.asarray([float("{0:.8f}".format(x)) for x in
                                (float(hdulist[1].header["BJDREFI"]) +
                                 hdulist[1].header["BJDREFF"] +
                                 hdulist[1].data["TIME"])])

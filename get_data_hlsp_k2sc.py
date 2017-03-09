@@ -67,7 +67,8 @@ def get_data_hlsp_k2sc(obsid):
                             extname = hdulist[j].header["EXTNAME"].strip()
 
                             # Timestamps.
-                            bjd = [x + 2454833.0 for x in
+                            bjd = [float("{0:.8f}".format(
+                                x + 2454833.0)) for x in
                                    hdulist[j].data["time"]]
 
                             # Corrected flux.
