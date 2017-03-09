@@ -155,3 +155,14 @@ Test Case 25::
 
     gzip unit_test_reffiles/deliver_data/test_case_25.txt
 
+Test Case 26::
+
+    python deliver_data.py -m hsla -o hsla_coadd -t NGC-5548 > unit_test_reffiles/deliver_data/test_case_26.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_26.txt
+
+Test Case 27::
+
+    python deliver_data.py -m hsla -o lbgu22z3q -t NGC-5548 > unit_test_reffiles/deliver_data/test_case_27.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_27.txt

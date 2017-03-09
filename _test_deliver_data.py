@@ -346,6 +346,30 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    def test_case26(self):
+        """ This tests HSLA support at the coadd level. """
+        new_str = deliver_data.deliver_data(
+            ["hsla"], ["hsla_coadd"], targets=["NGC-5548"])
+        old_file = self.reference_file_path + "test_case_26.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case27(self):
+        """ This tests HSLA support at the exposure level. """
+        new_str = deliver_data.deliver_data(
+            ["hsla"], ["lbgu22z3q"], targets=["NGC-5548"])
+        old_file = self.reference_file_path + "test_case_27.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
 #--------------------
 
 if __name__ == "__main__":
