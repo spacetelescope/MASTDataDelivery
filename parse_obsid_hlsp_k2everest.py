@@ -57,13 +57,13 @@ def parse_obsid_hlsp_k2everest(obsid):
     # Use the observation ID to get paths to each file.
     dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
                 "missions" + os.path.sep + "hlsp" + os.path.sep + "everest" +
-                os.path.sep + campaign + os.path.sep)
+                os.path.sep +'v2' +os.path.sep + campaign + os.path.sep)
     star_dir_root = (k2everestid[0:4] + "00000" + os.path.sep +
                      k2everestid[4:] + os.path.sep)
 
     # Generate FITS file name based on observation ID.
     file_name = ("hlsp_everest_k2_llc_"+ k2everestid +
-                 "-" + campaign + "_kepler_v1.0_lc.fits")
+                 "-" + campaign + "_kepler_v2.0_lc.fits")
     full_file_name = dir_root + star_dir_root + file_name
 
     if os.path.isfile(full_file_name):

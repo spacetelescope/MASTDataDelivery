@@ -59,11 +59,8 @@ def get_data_hlsp_k2everest(obsid):
         for kfile in parsed_file_result.files:
             try:
                 with fits.open(kfile) as hdulist:
-                    # Extract time stamps and relevant fluxes.  Note that for
-                    # K2EVEREST there are 21 relevant extensions, and two fluxes
-                    # (raw and detrended) for each.  The first extension is the
-                    # "best" aperture from the 20, then 2 - 21 are the 20 used.
-                    if len(hdulist) == 5:
+                    # Extract time stamps and relevant fluxes.
+                    if len(hdulist) == 6:
                         # Timestamps.
                         bjd = numpy.asarray([float(x) for x in
                                (float(hdulist[1].header["BJDREFI"]) +
@@ -72,12 +69,11 @@ def get_data_hlsp_k2everest(obsid):
                         # Raw flux.
                         raw_flux = numpy.asarray(
                             [float("{0:.8f}".format(x)) for x in
-                             hdulist[1].data["RAW_FLUX"]])
+                             hdulist[1].data["FRAW"]])
                         # Corrected flux.
                         cor_flux = numpy.asarray(
                             [float("{0:.8f}".format(x)) for x in
-                             hdulist[1].data["FLUX"]])
-
+                             hdulist[1].data["FCOR"]])
                         # Only keep those points that don't have NaN's in them.
                         where_keep = numpy.where(
                             (numpy.isfinite(bjd)) &
