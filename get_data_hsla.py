@@ -78,7 +78,8 @@ def get_data_hsla(obsid, targ):
             except IOError:
                 errcode = 4
                 all_data_series.append(DataSeries(
-                    'hsla', obsid, [], [''], [''], [''], errcode))
+                    'hsla', obsid, [], [''], [''], [''], errcode,
+                    is_ancillary=[1]))
             else:
                 # Create DataSeries if this is an exposure-level spectrum.
                 if obsid.lower().strip() != "hsla_coadd":
@@ -96,7 +97,7 @@ def get_data_hsla(obsid, targ):
                                          y=float("{0:.8e}".format(y)))
                               for x, y in wlfls]],
                             [obsid+'_'+this_seg], [hsla_xunit], [hsla_yunit],
-                            errcode))
+                            errcode, is_ancillary=[0]))
                         # Append the wl-flerr DataSeries for this segment.
                         all_data_series.append(DataSeries(
                             'hsla', obsid,
@@ -104,8 +105,7 @@ def get_data_hsla(obsid, targ):
                                          y=float("{0:.8e}".format(y)))
                               for x, y in wlfls_err]],
                             [obsid+'_'+this_seg+'_ERR'], [hsla_xunit],
-                            [hsla_yunit],
-                            errcode))
+                            [hsla_yunit], errcode, is_ancillary=[1]))
                 else:
                     # Create DataSeries if this is a coadd-level spectrum.
                     wls = [float(x) for x in wls]
@@ -113,6 +113,11 @@ def get_data_hsla(obsid, targ):
                     flerrs = [float(x) for x in flerrs]
                     wlfls = [x for x in zip(wls, fls)]
                     wlfls_err = [x for x in zip(wls, flerrs)]
+                    # Only plot the coadd across lifetime positions by default.
+                    if '_all.fits.gz' in os.path.basename(sfile):
+                        is_anc = [0]
+                    else:
+                        is_anc = [1]
                     # Append the wl-fl DataSeries for this segment.
                     all_data_series.append(DataSeries(
                         'hsla', obsid,
@@ -120,8 +125,8 @@ def get_data_hsla(obsid, targ):
                                      y=float("{0:.8e}".format(y)))
                           for x, y in wlfls]],
                         [os.path.basename(sfile).strip(".fits.gz")],
-                        [hsla_xunit], [hsla_yunit],
-                        errcode))
+                        [hsla_xunit], [hsla_yunit], errcode,
+                        is_ancillary=is_anc))
                     # Append the wl-flerr DataSeries for this segment.
                     all_data_series.append(DataSeries(
                         'hsla', obsid,
@@ -130,11 +135,11 @@ def get_data_hsla(obsid, targ):
                           for x, y in wlfls_err]],
                         [os.path.basename(sfile).strip(".fits.gz")+'_ERR'],
                         [hsla_xunit], [hsla_yunit],
-                        errcode))
+                        errcode, is_ancillary=[1]))
     else:
         # This is where an error DataSeries object would be returned.
         all_data_series.append(DataSeries(
-            'hsla', obsid, [], [], [], [], errcode))
+            'hsla', obsid, [], [], [], [], errcode, is_ancillary=[1]))
 
     # Return the DataSeries object back to the calling module.
     if len(all_data_series) == 1:

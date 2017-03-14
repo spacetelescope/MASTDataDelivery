@@ -14,7 +14,7 @@ class DataSeries(object):
     """
 
     def __init__(self, mission, obsid, plot_series, plot_labels,
-                 xunits, yunits, errcode):
+                 xunits, yunits, errcode, is_ancillary=None):
         """
         Create a DataSeries object.
 
@@ -50,6 +50,12 @@ class DataSeries(object):
         in the data.
 
         :type errcode: int
+
+        :param is_ancillary: A 1-D list of ints that, if set, indicates the
+        returned data should NOT be plotted by default.  If set to 0, then DO
+        plot by default.
+
+        :type is_ancillary: list
         """
         self.mission = mission
         self.obsid = obsid
@@ -58,4 +64,6 @@ class DataSeries(object):
         self.xunits = xunits
         self.yunits = yunits
         self.errcode = errcode
-#--------------------
+        if is_ancillary is not None:
+            self.is_ancillary = is_ancillary
+        #--------------------
