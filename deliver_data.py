@@ -13,6 +13,7 @@ import os
 from data_series import DataSeries
 from get_data_galex import get_data_galex
 from get_data_hlsp_k2everest import get_data_hlsp_k2everest
+from get_data_hlsp_k2polar import get_data_hlsp_k2polar
 from get_data_hlsp_k2sc import get_data_hlsp_k2sc
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
@@ -171,6 +172,8 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
             this_data_series = get_data_galex(obsid, filt, url.strip())
         if mission == "hlsp_k2everest":
             this_data_series = get_data_hlsp_k2everest(obsid)
+        if mission == "hlsp_k2polar":
+            this_data_series = get_data_hlsp_k2polar(obsid)
         if mission == "hlsp_k2sc":
             this_data_series = get_data_hlsp_k2sc(obsid)
         if mission == "hlsp_k2sff":
@@ -248,6 +251,7 @@ def setup_args():
                                  'fuse',
                                  'galex',
                                  'hlsp_k2everest',
+                                 'hlsp_k2polar',
                                  'hlsp_k2sc',
                                  'hlsp_k2sff',
                                  'hlsp_k2varcat',
