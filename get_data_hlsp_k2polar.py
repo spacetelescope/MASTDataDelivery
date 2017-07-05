@@ -61,15 +61,15 @@ def get_data_hlsp_k2polar(obsid):
                 with fits.open(kfile) as hdulist:
                     # Extract time stamps and relevant fluxes.
                     if len(hdulist) == 3:
-                        # Detrended timestamps.
-                        det_bjd = (hdulist[1].data["TIME"] + 2400000.0)
-                        # Detrended flux.
-                        det_flux = hdulist[1].data["FLUX"]
-
                         # Filtered timestamps.
-                        fil_bjd = (hdulist[2].data["FILTIME"] + 2400000.0)
+                        fil_bjd = (hdulist[1].data["FILTIME"] + 2400000.0)
                         # Filtered flux.
-                        fil_flux = hdulist[2].data["FILFLUX"]
+                        fil_flux = hdulist[1].data["FILFLUX"]
+
+                        # Detrended timestamps.
+                        det_bjd = (hdulist[2].data["DETTIME"] + 2400000.0)
+                        # Detrended flux.
+                        det_flux = hdulist[2].data["DETFLUX"]
 
                         # Only keep those points that don't have NaN's in them.
                         det_where_keep = numpy.where(
