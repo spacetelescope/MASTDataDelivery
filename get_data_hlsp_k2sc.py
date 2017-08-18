@@ -70,14 +70,9 @@ def get_data_hlsp_k2sc(obsid):
 
                             # Timestamps.
                             bjd = hdulist[j].data["time"] + 2454833.0
-#                            bjd = [float("{0:.8f}".format(
-#                                x + 2454833.0)) for x in
-#                                   hdulist[j].data["time"]]
 
                             # Corrected flux.
                             cor_flux = hdulist[j].data["flux"]
-#                            cor_flux = [float("{0:.8f}".format(x)) for x in
-#                                        hdulist[j].data["flux"]]
 
 
                             # Only keep those points that don't have NaN's in

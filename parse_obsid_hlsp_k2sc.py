@@ -39,6 +39,9 @@ def parse_obsid_hlsp_k2sc(obsid):
     # Initialize error code to 0 = pass.
     error_code = 0
 
+    # This string defines the version, used in both the path and file names.
+    ver_str = 'v2'
+
     # Split the observation ID into K2SC star name, campaign, and cadence.
     try:
         k2scid, campaign, cadence = [
@@ -57,12 +60,12 @@ def parse_obsid_hlsp_k2sc(obsid):
     # Use the observation ID to get paths to each file.
     dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
                 "missions" + os.path.sep + "hlsp" + os.path.sep + "k2sc" +
-                os.path.sep + campaign + os.path.sep)
+                os.path.sep + ver_str + os.path.sep + campaign + os.path.sep)
     star_dir_root = (k2scid[0:4] + "00000" + os.path.sep)
 
     # Generate FITS file name based on observation ID.
     file_name = ("hlsp_k2sc_k2_llc_"+ k2scid +
-                 "-" + campaign + "_kepler_v1_lc.fits")
+                 "-" + campaign + "_kepler_"+ver_str+"_lc.fits")
     full_file_name = dir_root + star_dir_root + file_name
 
     if os.path.isfile(full_file_name):
