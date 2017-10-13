@@ -178,3 +178,9 @@ Test Case 29::
     python deliver_data.py -m hlsp_k2gap -o k2gap201121245-c01_lc > unit_test_reffiles/deliver_data/test_case_29.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_29.txt
+
+Test Case 30::
+
+    python deliver_data.py -m hlsp_kegs -o kegs220163813-c08_lc > unit_test_reffiles/deliver_data/test_case_30.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_30.txt

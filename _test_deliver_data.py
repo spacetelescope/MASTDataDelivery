@@ -394,6 +394,18 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    def test_case30(self):
+        """ This uses EPIC 220163813 from Campaign 8. """
+        new_str = deliver_data.deliver_data(
+            ["hlsp_kegs"], ["kegs220163813-c08_lc"], filters=["k2"])
+        old_file = self.reference_file_path + "test_case_30.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
 #--------------------
 
 if __name__ == "__main__":
