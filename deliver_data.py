@@ -334,5 +334,5 @@ if __name__ == "__main__":
                                cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
-    print JSON_STRING
+    print(JSON_STRING)
 #--------------------
