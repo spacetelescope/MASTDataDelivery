@@ -373,7 +373,7 @@ class TestGetDataKepler(unittest.TestCase):
     def test_case28(self):
         """ This uses EPIC 201172129 from Campaign 1. """
         new_str = deliver_data.deliver_data(
-            ["hlsp_k2polar"], ["k2polar201172129-c01_lc"], filters=["k2"])
+            ["hlsp_polar"], ["polar201172129-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_28.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:

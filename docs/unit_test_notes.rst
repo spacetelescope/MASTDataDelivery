@@ -169,7 +169,7 @@ Test Case 27::
 
 Test Case 28::
 
-    python deliver_data.py -m hlsp_k2polar -o k2polar201172129-c01_lc > unit_test_reffiles/deliver_data/test_case_28.txt
+    python deliver_data.py -m hlsp_polar -o polar201172129-c01_lc > unit_test_reffiles/deliver_data/test_case_28.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_28.txt
 
