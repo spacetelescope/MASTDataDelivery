@@ -56,7 +56,7 @@ def parse_obsid_hlsp_k2varcat(obsid):
 
     # Use the observation ID to get paths to each file.
     dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "missions" + os.path.sep + "hlsp" + os.path.sep + "k2varcat" +
+                "hlsps" + os.path.sep + "k2varcat" +
                 os.path.sep + campaign + os.path.sep)
     star_dir_root = (k2varcatid[0:4] + "00000" + os.path.sep + k2varcatid[4:6] +
                      "000" + os.path.sep)
