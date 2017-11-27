@@ -1,7 +1,7 @@
 """
-.. module:: get_data_hlsp_k2everest
+.. module:: get_data_hlsp_everest
 
-   :synopsis: Returns K2EVEREST lightcurve data as a JSON string.
+   :synopsis: Returns EVEREST lightcurve data as a JSON string.
 
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
@@ -10,23 +10,23 @@ import collections
 import numpy
 from astropy.io import fits
 from data_series import DataSeries
-from parse_obsid_hlsp_k2everest import parse_obsid_hlsp_k2everest
+from parse_obsid_hlsp_everest import parse_obsid_hlsp_everest
 
 #--------------------
-def get_data_hlsp_k2everest(obsid):
+def get_data_hlsp_everest(obsid):
     """
-    Given a K2EVEREST observation ID, returns the lightcurve data.
+    Given a EVEREST observation ID, returns the lightcurve data.
 
-    :param obsid: The K2EVEREST observation ID to retrieve the data from.
+    :param obsid: The EVEREST observation ID to retrieve the data from.
 
     :type obsid: str
 
     :returns: JSON -- The lightcurve data for this observation ID.
 
     Error codes:
-    From parse_obsid_hlsp_k2everest:
+    From parse_obsid_hlsp_everest:
     0 = No error.
-    1 = Error parsing K2EVEREST observation ID.
+    1 = Error parsing EVEREST observation ID.
     2 = Cadence not recognized as long cadence.
     3 = File is missing on disk.
     From this module:
@@ -38,13 +38,13 @@ def get_data_hlsp_k2everest(obsid):
     # This defines a data point for a DataSeries object as a namedtuple.
     data_point = collections.namedtuple('DataPoint', ['x', 'y'])
 
-    # For K2EVEREST, this defines the x-axis and y-axis units as a string.
-    k2everest_xunit = "BJD"
-    k2everest_yunit = "electrons / second"
+    # For EVEREST, this defines the x-axis and y-axis units as a string.
+    everest_xunit = "BJD"
+    everest_yunit = "electrons / second"
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    parsed_file_result = parse_obsid_hlsp_k2everest(obsid)
+    parsed_file_result = parse_obsid_hlsp_everest(obsid)
 
     if parsed_file_result.errcode == 0:
         # For each file, read in the contents and create a return JSON object.
@@ -84,7 +84,7 @@ def get_data_hlsp_k2everest(obsid):
                         # Create the plot label and plot series for the
                         # extracted and detrended fluxes.
                         this_plot_label = (
-                            'K2EVEREST_' + parsed_file_result.k2everestid +
+                            'EVEREST_' + parsed_file_result.everestid +
                             ' ' + parsed_file_result.campaign.upper())
 
                         if errcode == 0:
@@ -98,15 +98,15 @@ def get_data_hlsp_k2everest(obsid):
                                                   ' Raw')
                             all_plot_series[0] = [data_point(x=x, y=y) for
                                                   x, y in zip(bjd, raw_flux)]
-                            all_plot_xunits[0] = k2everest_xunit
-                            all_plot_yunits[0] = k2everest_yunit
+                            all_plot_xunits[0] = everest_xunit
+                            all_plot_yunits[0] = everest_yunit
                             all_plot_labels[1] = (this_plot_label +
                                                   ' Corrected')
                             all_plot_series[1] = [data_point(x=x, y=y) for
                                                   x, y in zip(bjd,
                                                               cor_flux)]
-                            all_plot_xunits[1] = k2everest_xunit
-                            all_plot_yunits[1] = k2everest_yunit
+                            all_plot_xunits[1] = everest_xunit
+                            all_plot_yunits[1] = everest_yunit
                         else:
                             all_plot_labels[0] = ''
                             all_plot_series[0] = []
@@ -131,13 +131,13 @@ def get_data_hlsp_k2everest(obsid):
                 all_plot_yunits[1] = ''
 
         # Create the return DataSeries object.
-        return_dataseries = DataSeries('hlsp_k2everest', obsid, all_plot_series,
+        return_dataseries = DataSeries('hlsp_everest', obsid, all_plot_series,
                                        all_plot_labels,
                                        all_plot_xunits, all_plot_yunits,
                                        errcode)
     else:
         # This is where an error DataSeries object would be returned.
-        return_dataseries = DataSeries('hlsp_k2everest', obsid, [], [], [], [],
+        return_dataseries = DataSeries('hlsp_everest', obsid, [], [], [], [],
                                        parsed_file_result.errcode)
 
     # Return the DataSeries object back to the calling module.

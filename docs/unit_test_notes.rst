@@ -151,7 +151,7 @@ Test Case 24::
 
 Test Case 25::
 
-    python deliver_data.py -m hlsp_k2everest -o k2everest202059070-c00_lc > unit_test_reffiles/deliver_data/test_case_25.txt
+    python deliver_data.py -m hlsp_everest -o everest210636932-c04_lc > unit_test_reffiles/deliver_data/test_case_25.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_25.txt
 

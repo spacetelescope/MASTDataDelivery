@@ -67,16 +67,17 @@ def get_data_hlsp_k2sff(obsid):
                             extname = hdulist[j].header["EXTNAME"].strip()
 
                             # Timestamps.
-                            bjd = [float(x) for x in
-                                   (float(hdulist[j].header["BJDREFI"]) +
-                                    hdulist[j].header["BJDREFF"] +
-                                    hdulist[j].data["T"])]
+                            bjdreff = hdulist[j].header["BJDREFF"]
+                            bjdrefi = hdulist[j].header["BJDREFI"]
+                            bjd = [float("{0:.8f}".format(
+                                x + bjdreff + bjdrefi)) for x in
+                                   hdulist[j].data["T"]]
 
                             # Raw flux.
-                            raw_flux = [float(x) for x in
+                            raw_flux = [float("{0:.8f}".format(x)) for x in
                                         hdulist[j].data["FRAW"]]
                             # Corrected flux.
-                            cor_flux = [float(x) for x in
+                            cor_flux = [float("{0:.8f}".format(x)) for x in
                                         hdulist[j].data["FCOR"]]
 
                             # Create the plot label and plot series for the

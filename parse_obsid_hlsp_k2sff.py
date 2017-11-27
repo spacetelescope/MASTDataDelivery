@@ -56,7 +56,7 @@ def parse_obsid_hlsp_k2sff(obsid):
 
     # Use the observation ID to get paths to each file.
     dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "missions" + os.path.sep + "hlsp" + os.path.sep + "k2sff" +
+                "hlsps" + os.path.sep + "k2sff" +
                 os.path.sep + campaign + os.path.sep)
     star_dir_root = (k2sffid[0:4] + "00000" + os.path.sep + k2sffid[4:] +
                      os.path.sep)
