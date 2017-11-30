@@ -151,7 +151,7 @@ Test Case 24::
 
 Test Case 25::
 
-    python deliver_data.py -m hlsp_k2everest -o k2everest202059070-c00_lc > unit_test_reffiles/deliver_data/test_case_25.txt
+    python deliver_data.py -m hlsp_everest -o everest210636932-c04_lc > unit_test_reffiles/deliver_data/test_case_25.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_25.txt
 
@@ -169,7 +169,7 @@ Test Case 27::
 
 Test Case 28::
 
-    python deliver_data.py -m hlsp_k2polar -o k2polar201172129-c01_lc > unit_test_reffiles/deliver_data/test_case_28.txt
+    python deliver_data.py -m hlsp_polar -o polar201172129-c01_lc > unit_test_reffiles/deliver_data/test_case_28.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_28.txt
 
@@ -178,3 +178,9 @@ Test Case 29::
     python deliver_data.py -m hlsp_k2gap -o k2gap201121245-c01_lc > unit_test_reffiles/deliver_data/test_case_29.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_29.txt
+
+Test Case 30::
+
+    python deliver_data.py -m hlsp_kegs -o kegs220163813-c08_lc > unit_test_reffiles/deliver_data/test_case_30.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_30.txt

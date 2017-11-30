@@ -12,9 +12,10 @@ import json
 import os
 from data_series import DataSeries
 from get_data_galex import get_data_galex
-from get_data_hlsp_k2everest import get_data_hlsp_k2everest
+from get_data_hlsp_everest import get_data_hlsp_everest
 from get_data_hlsp_k2gap import get_data_hlsp_k2gap
-from get_data_hlsp_k2polar import get_data_hlsp_k2polar
+from get_data_hlsp_kegs import get_data_hlsp_kegs
+from get_data_hlsp_polar import get_data_hlsp_polar
 from get_data_hlsp_k2sc import get_data_hlsp_k2sc
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
 from get_data_hlsp_k2varcat import get_data_hlsp_k2varcat
@@ -171,12 +172,14 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
             this_data_series = mpl_get_data_fuse(obsid)
         if mission == "galex":
             this_data_series = get_data_galex(obsid, filt, url.strip())
-        if mission == "hlsp_k2everest":
-            this_data_series = get_data_hlsp_k2everest(obsid)
+        if mission == "hlsp_everest":
+            this_data_series = get_data_hlsp_everest(obsid)
         if mission == "hlsp_k2gap":
             this_data_series = get_data_hlsp_k2gap(obsid)
-        if mission == "hlsp_k2polar":
-            this_data_series = get_data_hlsp_k2polar(obsid)
+        if mission == "hlsp_kegs":
+            this_data_series = get_data_hlsp_kegs(obsid)
+        if mission == "hlsp_polar":
+            this_data_series = get_data_hlsp_polar(obsid)
         if mission == "hlsp_k2sc":
             this_data_series = get_data_hlsp_k2sc(obsid)
         if mission == "hlsp_k2sff":
@@ -253,9 +256,10 @@ def setup_args():
                                  'euve',
                                  'fuse',
                                  'galex',
-                                 'hlsp_k2everest',
+                                 'hlsp_everest',
                                  'hlsp_k2gap',
-                                 'hlsp_k2polar',
+                                 'hlsp_kegs',
+                                 'hlsp_polar',
                                  'hlsp_k2sc',
                                  'hlsp_k2sff',
                                  'hlsp_k2varcat',
@@ -330,5 +334,5 @@ if __name__ == "__main__":
                                cache_dir=ARGS.cache_dir)
 
     # Print the return JSON object to STDOUT.
-    print JSON_STRING
+    print(JSON_STRING)
 #--------------------

@@ -7,10 +7,13 @@ Detailed documentation about how DataDelivery treats data from a given mission i
 | Mission           | Doc Link |
 | -------           | -------- |
 | GALEX             | [DOC](docs/doc_galex.md) |
-| hlsp_k2everest    | [DOC](docs/doc_hlsp_k2everest.md) |
+| hlsp_everest      | [DOC](docs/doc_hlsp_everest.md) |
+| hlsp_k2gap        | [DOC](docs/doc_hlsp_k2gap.md) |
+| hlsp_polar        | [DOC](docs/doc_hlsp_polar.md) |
 | hlsp_k2sc         | [DOC](docs/doc_hlsp_k2sc.md) |
 | hlsp_k2sff        | [DOC](docs/doc_hlsp_k2sff.md) |
 | hlsp_k2varcat     | [DOC](docs/doc_hlsp_k2varcat.md) |
+| hlsp_kegs         | [DOC](docs/doc_hlsp_kegs.md) |
 | HSC_GRISM         | [DOC](docs/doc_hsc_grism.md) |
 | HSLA              | [DOC](docs/doc_hsla.md) |
 | IUE               | [DOC](docs/doc_iue.md) |

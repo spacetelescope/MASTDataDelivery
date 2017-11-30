@@ -335,9 +335,9 @@ class TestGetDataKepler(unittest.TestCase):
         self.assertEqual(old_str, new_str)
 
     def test_case25(self):
-        """ This uses EPIC 202059070 from Campaign 0. """
+        """ This uses EPIC 210636932 from Campaign 4. """
         new_str = deliver_data.deliver_data(
-            ["hlsp_k2everest"], ["k2everest202059070-c00_lc"], filters=["k2"])
+            ["hlsp_everest"], ["everest210636932-c04_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_25.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:
@@ -373,7 +373,7 @@ class TestGetDataKepler(unittest.TestCase):
     def test_case28(self):
         """ This uses EPIC 201172129 from Campaign 1. """
         new_str = deliver_data.deliver_data(
-            ["hlsp_k2polar"], ["k2polar201172129-c01_lc"], filters=["k2"])
+            ["hlsp_polar"], ["polar201172129-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_28.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:
@@ -387,6 +387,18 @@ class TestGetDataKepler(unittest.TestCase):
         new_str = deliver_data.deliver_data(
             ["hlsp_k2gap"], ["k2gap201121245-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_29.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rb') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case30(self):
+        """ This uses EPIC 220163813 from Campaign 8. """
+        new_str = deliver_data.deliver_data(
+            ["hlsp_kegs"], ["kegs220163813-c08_lc"], filters=["k2"])
+        old_file = self.reference_file_path + "test_case_30.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rb') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
