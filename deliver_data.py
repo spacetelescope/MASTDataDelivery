@@ -14,7 +14,7 @@ from data_series import DataSeries
 from get_data_galex import get_data_galex
 from get_data_hlsp_everest import get_data_hlsp_everest
 from get_data_hlsp_k2gap import get_data_hlsp_k2gap
-from get_data_hlsp_k2kegs import get_data_hlsp_k2kegs
+from get_data_hlsp_kegs import get_data_hlsp_kegs
 from get_data_hlsp_polar import get_data_hlsp_polar
 from get_data_hlsp_k2sc import get_data_hlsp_k2sc
 from get_data_hlsp_k2sff import get_data_hlsp_k2sff
@@ -177,7 +177,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
         if mission == "hlsp_k2gap":
             this_data_series = get_data_hlsp_k2gap(obsid)
         if mission == "hlsp_kegs":
-            this_data_series = get_data_hlsp_k2kegs(obsid)
+            this_data_series = get_data_hlsp_kegs(obsid)
         if mission == "hlsp_polar":
             this_data_series = get_data_hlsp_polar(obsid)
         if mission == "hlsp_k2sc":
