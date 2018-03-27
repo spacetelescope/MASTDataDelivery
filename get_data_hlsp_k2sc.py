@@ -64,7 +64,7 @@ def get_data_hlsp_k2sc(obsid):
                     # extension is the detrended PDCSAP lightcurve, the second
                     # is the detrended SAP lightcurve.
                     if len(hdulist) == 3:
-                        for j in xrange(1, 3):
+                        for j in range(1, 3):
                             # Extension name.
                             extname = hdulist[j].header["EXTNAME"].strip()
 
@@ -80,7 +80,7 @@ def get_data_hlsp_k2sc(obsid):
                             where_keep = numpy.where(
                                 (numpy.isfinite(bjd)) &
                                 (numpy.isfinite(cor_flux)))[0]
-                            if len(where_keep) > 0:
+                            if where_keep.size > 0:
                                 bjd = bjd[where_keep]
                                 cor_flux = cor_flux[where_keep]
                             else:

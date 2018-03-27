@@ -6,11 +6,11 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-from astropy.io import fits
 import collections
+import re
+from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_hlsp_k2varcat import parse_obsid_hlsp_k2varcat
-import re
 
 #--------------------
 def get_data_hlsp_k2varcat(obsid):

@@ -70,9 +70,8 @@ def parse_obsid_hlsp_everest(obsid):
         return parsed_values(everestid=everestid, cadence=cadence,
                              campaign=campaign, errcode=error_code,
                              files=[full_file_name])
-    else:
-        error_code = 3
-        return parsed_values(everestid=everestid, cadence=cadence,
-                             campaign=campaign, errcode=error_code,
-                             files=[full_file_name])
+    error_code = 3
+    return parsed_values(everestid=everestid, cadence=cadence,
+                         campaign=campaign, errcode=error_code,
+                         files=[full_file_name])
     #--------------------

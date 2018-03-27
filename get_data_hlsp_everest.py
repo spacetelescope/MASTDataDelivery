@@ -74,7 +74,7 @@ def get_data_hlsp_everest(obsid):
                             (numpy.isfinite(bjd)) &
                             (numpy.isfinite(raw_flux)) &
                             (numpy.isfinite(cor_flux)))[0]
-                        if len(where_keep) > 0:
+                        if where_keep.size > 0:
                             bjd = bjd[where_keep]
                             raw_flux = raw_flux[where_keep]
                             cor_flux = cor_flux[where_keep]

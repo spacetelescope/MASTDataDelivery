@@ -56,23 +56,22 @@ def parse_obsid_hlsp_kegs(obsid):
 
     # Use the observation ID to get paths to each file.
     dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "hlsps" + os.path.sep + "kegs" +
+                "hlsps" + os.path.sep + "kegs" + os.path.sep + "v2" +
                 os.path.sep + campaign + os.path.sep)
     star_dir_root = (kegsid[0:4] + "00000" + os.path.sep + kegsid[4:] +
                      os.path.sep)
 
     # Generate FITS file name based on observation ID.
     file_name = ("hlsp_kegs_k2_lightcurve_"+ kegsid +
-                 "-" + campaign + "_kepler_v1_llc.fits")
+                 "-" + campaign + "_kepler_v2_llc.fits")
     full_file_name = dir_root + star_dir_root + file_name
 
     if os.path.isfile(full_file_name):
         return parsed_values(kegsid=kegsid, cadence=cadence,
                              campaign=campaign, errcode=error_code,
                              files=[full_file_name])
-    else:
-        error_code = 3
-        return parsed_values(kegsid=kegsid, cadence=cadence,
-                             campaign=campaign, errcode=error_code,
-                             files=[full_file_name])
+    error_code = 3
+    return parsed_values(kegsid=kegsid, cadence=cadence,
+                         campaign=campaign, errcode=error_code,
+                         files=[full_file_name])
     #--------------------

@@ -8,8 +8,8 @@
 """
 
 import collections
-from data_series import DataSeries
 from operator import itemgetter
+from data_series import DataSeries
 import requests
 
 #--------------------
@@ -51,7 +51,7 @@ def mpl_get_data_fuse(obsid):
     else:
         return_request = return_request.json()
 
-        if len(return_request[0]) == 0:
+        if not return_request[0]:
             # File not found by service.
             errcode = 2
             return_dataseries = DataSeries('fuse', obsid, [], [], [], [],
@@ -68,7 +68,7 @@ def mpl_get_data_fuse(obsid):
             errcode = 0
 
             # Make sure wavelengths and fluxes are not empty and are same size.
-            if len(wls) > 0 and len(fls) > 0 and len(wls) == len(fls):
+            if wls and fls and len(wls) == len(fls):
 
                 # Make sure wavelengths and fluxes are sorted
                 # from smallest wavelength to largest.
@@ -86,7 +86,7 @@ def mpl_get_data_fuse(obsid):
                                                ['FUSE_' + obsid],
                                                [fuse_xunit], [fuse_yunit],
                                                errcode)
-            elif len(wls) == 0 or len(fls) == 0:
+            elif not wls or not fls:
                 errcode = 3
                 return_dataseries = DataSeries('fuse', obsid, [], [], [], [],
                                                errcode)

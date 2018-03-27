@@ -74,7 +74,8 @@ def json_too_big_object(mission, obsid):
     all_data_series = [DataSeries(mission, obsid, [], [], [], [], errcode)]
     # Create the default return JSON object.
     return_json = json.dumps(all_data_series, ensure_ascii=False,
-                             check_circular=False, default=json_encoder)
+                             check_circular=False, default=json_encoder,
+                             sort_keys=True)
     return return_json
 #--------------------
 
@@ -209,8 +210,7 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
                         return_string = ifile.readlines()[0]
                         if len(return_string) <= max_json_size:
                             return return_string
-                        else:
-                            return json_too_big_object(mission, obsid)
+                        return json_too_big_object(mission, obsid)
                 else:
                     # Cache file is missing, fall back to creating from FITS.
                     this_data_series = get_data_kepler(obsid)
@@ -230,11 +230,11 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
 
     # Return the list of DataSeries objects as a JSON string.
     return_string = json.dumps(all_data_series, ensure_ascii=False,
-                               check_circular=False, default=json_encoder)
+                               check_circular=False, default=json_encoder,
+                               sort_keys=True)
     if len(return_string) <= max_json_size:
         return return_string
-    else:
-        return json_too_big_object(', '.join(missions), ', '.join(obsids))
+    return json_too_big_object(', '.join(missions), ', '.join(obsids))
 #--------------------
 
 #--------------------

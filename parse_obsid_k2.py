@@ -79,9 +79,8 @@ def parse_obsid_k2(obsid):
         return parsed_values(k2id=k2id, cadence=cadence,
                              campaign=campaign, errcode=error_code,
                              files=[full_file_name])
-    else:
-        error_code = 3
-        return parsed_values(k2id=k2id, cadence=cadence,
-                             campaign=campaign, errcode=error_code,
-                             files=[full_file_name])
+    error_code = 3
+    return parsed_values(k2id=k2id, cadence=cadence,
+                         campaign=campaign, errcode=error_code,
+                         files=[full_file_name])
     #--------------------

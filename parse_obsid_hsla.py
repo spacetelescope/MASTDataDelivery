@@ -64,17 +64,14 @@ def parse_obsid_hsla(obsid, targ):
         spec_files = glob(file_location + "*coadd*.fits.gz")
         # Sort them for reproducibility and unit testing purposes.
         spec_files.sort()
-        if len(spec_files) > 0:
+        if spec_files:
             return parsed_values(errcode=error_code, specfiles=spec_files)
-        else:
-            error_code = 2
-            return parsed_values(errcode=error_code, specfiles=[''])
-    else:
-        exposure_level_file = file_location + obsid + "_x1d.fits.gz"
-        if os.path.isfile(exposure_level_file):
-            return parsed_values(errcode=error_code,
-                                 specfiles=[exposure_level_file])
-        else:
-            error_code = 2
-            return parsed_values(errcode=error_code, specfiles=[''])
+        error_code = 2
+        return parsed_values(errcode=error_code, specfiles=[''])
+    exposure_level_file = file_location + obsid + "_x1d.fits.gz"
+    if os.path.isfile(exposure_level_file):
+        return parsed_values(errcode=error_code,
+                             specfiles=[exposure_level_file])
+    error_code = 2
+    return parsed_values(errcode=error_code, specfiles=[''])
 #--------------------

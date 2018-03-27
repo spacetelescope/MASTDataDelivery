@@ -66,7 +66,6 @@ def parse_obsid_iue(obsid, filt):
 
     if os.path.isfile(file_to_return):
         return parsed_values(errcode=error_code, specfiles=[file_to_return])
-    else:
-        error_code = 2
-        return parsed_values(errcode=error_code, specfiles=[''])
+    error_code = 2
+    return parsed_values(errcode=error_code, specfiles=[''])
 #--------------------
