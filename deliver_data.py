@@ -24,6 +24,7 @@ from get_data_hsla import get_data_hsla
 from get_data_iue import get_data_iue
 from get_data_k2 import get_data_k2
 from get_data_kepler import get_data_kepler
+from get_data_states import get_data_states
 
 from mpl_get_data_befs import mpl_get_data_befs
 from mpl_get_data_euve import mpl_get_data_euve
@@ -216,6 +217,8 @@ def deliver_data(missions, obsids, filters=FILTERS_DEFAULT, urls=URLS_DEFAULT,
                     this_data_series = get_data_kepler(obsid)
             else:
                 this_data_series = get_data_kepler(obsid)
+        if mission == "states":
+            this_data_series = get_data_states(obsid)
         if mission == "tues":
             this_data_series = mpl_get_data_tues(obsid)
         if mission == "wuppe":
@@ -268,6 +271,7 @@ def setup_args():
                                  'iue',
                                  'k2',
                                  'kepler',
+                                 'states',
                                  'tues',
                                  'wuppe'],
                         help="Required: The mission(s) where this data comes "
