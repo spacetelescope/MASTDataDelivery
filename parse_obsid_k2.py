@@ -26,7 +26,7 @@ def parse_obsid_k2(obsid):
     Error codes:
     0 = No error parsing observation ID.
     1 = Error parsing K2 observation ID.
-    2 = Cadence not recognized as long cadence.
+    2 = Cadence not recognized as long or short cadence.
     3 = File is missing on disk.
     """
 
@@ -57,8 +57,8 @@ def parse_obsid_k2(obsid):
     # The part of the directory with the campaign number is *not* zero-padded.
     campaign_subdir = 'c'+'{0:2d}'.format(int(campaign[1:])).strip()
 
-    # Make sure the cadence type is 'lc'.
-    if cadence != 'lc':
+    # Make sure the cadence type is 'lc' or 'sc'.
+    if cadence != 'lc' and cadence != 'sc':
         error_code = 2
         return parsed_values(k2id=k2id, cadence=cadence,
                              campaign=campaign, errcode=error_code, files=[''])
@@ -71,8 +71,12 @@ def parse_obsid_k2(obsid):
                      os.path.sep)
 
     # Generate FITS file name based on observation ID.
+    if cadence == 'lc':
+        cadence_str = '_llc'
+    elif cadence == 'sc':
+        cadence_str = '_slc'
     file_name = ("ktwo"+ k2id +
-                 "-" + campaign + "_l" + cadence + ".fits")
+                 "-" + campaign + cadence_str + ".fits")
     full_file_name = dir_root + star_dir_root + file_name
 
     if os.path.isfile(full_file_name):

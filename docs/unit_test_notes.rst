@@ -196,3 +196,9 @@ Test Case 32::
     python deliver_data.py -m states -o TRAPPIST-1b_transmission_deWit2016 > unit_test_reffiles/deliver_data/test_case_32.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_32.txt
+
+Test Case 33::
+
+    python deliver_data.py -m k2 -o ktwo203385347-c15_sc > unit_test_reffiles/deliver_data/test_case_33.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_33.txt

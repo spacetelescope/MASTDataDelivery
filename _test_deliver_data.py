@@ -430,6 +430,18 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    def test_case33(self):
+        """ This tests a K2 short cadence file. """
+        new_str = deliver_data.deliver_data(
+            ["k2"], ["ktwo203385347-c15_sc"])
+        old_file = self.reference_file_path + "test_case_33.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
 #--------------------
 
 if __name__ == "__main__":
