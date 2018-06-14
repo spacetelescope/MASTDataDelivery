@@ -75,7 +75,7 @@ def get_data_hlsp_polar(obsid):
                         det_where_keep = numpy.where(
                             (numpy.isfinite(det_bjd)) &
                             (numpy.isfinite(det_flux)))[0]
-                        if len(det_where_keep) > 0:
+                        if det_where_keep.size > 0:
                             det_bjd = det_bjd[det_where_keep]
                             det_flux = det_flux[det_where_keep]
                         else:
@@ -84,7 +84,7 @@ def get_data_hlsp_polar(obsid):
                         fil_where_keep = numpy.where(
                             (numpy.isfinite(fil_bjd)) &
                             (numpy.isfinite(fil_flux)))[0]
-                        if len(fil_where_keep) > 0:
+                        if fil_where_keep.size > 0:
                             fil_bjd = fil_bjd[fil_where_keep]
                             fil_flux = fil_flux[fil_where_keep]
                         else:

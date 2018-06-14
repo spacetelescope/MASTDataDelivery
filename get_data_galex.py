@@ -6,8 +6,8 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-from astropy.io import fits
 import collections
+from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_galex import parse_obsid_galex
 

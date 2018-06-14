@@ -26,7 +26,7 @@ class TestGetDataKepler(unittest.TestCase):
             filters=["kepler"])
         old_file = self.reference_file_path + "test_case_01.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -39,7 +39,7 @@ class TestGetDataKepler(unittest.TestCase):
             filters=["kepler"])
         old_file = self.reference_file_path + "test_case_02.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -58,7 +58,7 @@ class TestGetDataKepler(unittest.TestCase):
             filters=["kepler", "kepler"])
         old_file = self.reference_file_path + "test_case_03.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -72,7 +72,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2varcat"], ["k2varcat202070161-c00_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_04.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -84,7 +84,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2varcat"], ["k2varcat201515470-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_05.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -98,7 +98,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2sff"], ["k2sff060019819-cet_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_06.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -110,7 +110,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2sff"], ["k2sff202071387-c00_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_07.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -122,7 +122,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2sff"], ["k2sff204417450-c02_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_08.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -136,7 +136,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwp00501"], filters=["HIGH_DISP"])
         old_file = self.reference_file_path + "test_case_09.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -148,7 +148,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwp02572"], filters=["LOW_DISP"])
         old_file = self.reference_file_path + "test_case_10.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -160,7 +160,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwr01244"], filters=["LOW_DISP"])
         old_file = self.reference_file_path + "test_case_11.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -172,7 +172,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwr01245"], filters=["HIGH_DISP"])
         old_file = self.reference_file_path + "test_case_12.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -184,7 +184,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["swp01687"], filters=["LOW_DISP"])
         old_file = self.reference_file_path + "test_case_13.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -196,7 +196,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["swp01688"], filters=["HIGH_DISP"])
         old_file = self.reference_file_path + "test_case_14.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -208,7 +208,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwp04212"], filters=["HIGH_DISP"])
         old_file = self.reference_file_path + "test_case_15.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -220,7 +220,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["lwp15463"], filters=["LOw_DISP"])
         old_file = self.reference_file_path + "test_case_16.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -232,7 +232,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["iue"], ["swp32470"], filters=["HIGH_DISP"])
         old_file = self.reference_file_path + "test_case_17.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -246,7 +246,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["k2"], ["ktwo205896873-c03_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_18.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -262,7 +262,7 @@ class TestGetDataKepler(unittest.TestCase):
                    "main/0001-img/07-try/qa/CDFS_00-xg-int_2color.jpg")])
         old_file = self.reference_file_path + "test_case_19.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -277,7 +277,7 @@ class TestGetDataKepler(unittest.TestCase):
                    "CDFS_00_id021790-xg-gsp_spc.jpeg")])
         old_file = self.reference_file_path + "test_case_20.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -292,7 +292,7 @@ class TestGetDataKepler(unittest.TestCase):
                    "PTF10cwr_id006852-xg-gsp_spc.jpeg")])
         old_file = self.reference_file_path + "test_case_21.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -304,7 +304,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hsc_grism"], ["HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC1D.FITS"])
         old_file = self.reference_file_path + "test_case_22.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -316,7 +316,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hsc_grism"], ["HAG_J033148.83-274850.4_UDFNICP2_V01.SPEC2D.FITS"])
         old_file = self.reference_file_path + "test_case_23.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -328,7 +328,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2sc"], ["k2sc200004923-c03_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_24.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -340,7 +340,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_everest"], ["everest210636932-c04_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_25.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -352,7 +352,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hsla"], ["hsla_coadd"], targets=["NGC-5548"])
         old_file = self.reference_file_path + "test_case_26.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -364,7 +364,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hsla"], ["lbgu22z3q"], targets=["NGC-5548"])
         old_file = self.reference_file_path + "test_case_27.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -376,7 +376,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_polar"], ["polar201172129-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_28.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -388,7 +388,7 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_k2gap"], ["k2gap201121245-c01_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_29.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)
@@ -400,7 +400,43 @@ class TestGetDataKepler(unittest.TestCase):
             ["hlsp_kegs"], ["kegs220163813-c08_lc"], filters=["k2"])
         old_file = self.reference_file_path + "test_case_30.txt.gz"
         if os.path.isfile(old_file):
-            with gzip.open(old_file, 'rb') as oldfile:
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case31(self):
+        """ This tests a STATES file that should work. """
+        new_str = deliver_data.deliver_data(
+            ["states"], ["XO-1b_transmission_Deming2013"])
+        old_file = self.reference_file_path + "test_case_31.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case32(self):
+        """ This tests a STATES file that is empty and should not work. """
+        new_str = deliver_data.deliver_data(
+            ["states"], ["TRAPPIST-1b_transmission_deWit2016"])
+        old_file = self.reference_file_path + "test_case_32.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case33(self):
+        """ This tests a K2 short cadence file. """
+        new_str = deliver_data.deliver_data(
+            ["k2"], ["ktwo203385347-c15_sc"])
+        old_file = self.reference_file_path + "test_case_33.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
                 old_str = oldfile.readlines()[0].strip()
         else:
             self.fail(msg="Reference file not found.  Looking for " + old_file)

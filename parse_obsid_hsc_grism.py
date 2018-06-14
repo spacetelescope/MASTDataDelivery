@@ -70,7 +70,6 @@ def parse_obsid_hsc_grism(obsid):
 
     if os.path.isfile(spec_file):
         return parsed_values(errcode=error_code, specfiles=[spec_file])
-    else:
-        error_code = 3
-        return parsed_values(errcode=error_code, specfiles=[''])
+    error_code = 3
+    return parsed_values(errcode=error_code, specfiles=[''])
 #--------------------

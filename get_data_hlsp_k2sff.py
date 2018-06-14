@@ -6,8 +6,8 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-from astropy.io import fits
 import collections
+from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_hlsp_k2sff import parse_obsid_hlsp_k2sff
 
@@ -62,7 +62,7 @@ def get_data_hlsp_k2sff(obsid):
                     # (raw and detrended) for each.  The first extension is the
                     # "best" aperture from the 20, then 2 - 21 are the 20 used.
                     if len(hdulist) == 25:
-                        for j in xrange(1, 22):
+                        for j in range(1, 22):
                             # Extension name.
                             extname = hdulist[j].header["EXTNAME"].strip()
 

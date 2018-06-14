@@ -6,12 +6,12 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-from astropy.io import fits
 import collections
-from data_series import DataSeries
 import math
-import numpy
 from operator import itemgetter
+from astropy.io import fits
+from data_series import DataSeries
+import numpy
 from parse_obsid_iue import parse_obsid_iue
 from scipy.interpolate import interp1d
 
@@ -151,7 +151,7 @@ def order_combine(order_spectra, camera, showplot=False):
     all_wls = []
     all_fls = []
 
-    for ord_ind in xrange(len(order_spectra)-1):
+    for ord_ind in range(len(order_spectra)-1):
         # Current order ("m").
         wls1 = order_spectra[ord_ind]['wls']
         fls1 = order_spectra[ord_ind]['fls']
@@ -246,7 +246,7 @@ def resample_spectrum(combined_spectrum, camera, showplot=False):
     wl_gaps = numpy.where(numpy.digitize(wl_diffs, [3.*numpy.mean(wl_diffs)]) !=
                           0)[0]
     # If there are no gaps at all, then define the gap to be the last element.
-    if len(wl_gaps) == 0:
+    if wl_gaps.size == 0:
         wl_gaps = numpy.asarray([len(wls)-1])
 
     # Build the binned spectrum for each subspectrum (skipping over gaps).
@@ -409,10 +409,10 @@ def get_data_iue(obsid, filt):
 
                         # Generate the full array of wavelength values, and get
                         # full array of flux values, for each  aperture.
-                        for aper in xrange(n_apertures):
+                        for aper in range(n_apertures):
                             wls = [starting_wl[aper] +
                                    x*delta_wl[aper] for
-                                   x in xrange(n_wls[aper])]
+                                   x in range(n_wls[aper])]
                             fls = [float(x) for
                                    x in hdulist[1].data["flux"][aper]]
                             # Make sure wavelengths and fluxes are sorted
@@ -475,7 +475,7 @@ def get_data_iue(obsid, filt):
                                 hdulist[1].data["deltaw"][order])
                             # Generate the full array of wavelength values.
                             wls = [starting_wl + x*delta_wl for x in
-                                   xrange(n_p)]
+                                   range(n_p)]
                             # Extract the fluxes that go along with these wls.
                             all_fluxes = hdulist[1].data["abs_cal"][order]
                             fls = [float(x) for x in
@@ -534,6 +534,5 @@ def get_data_iue(obsid, filt):
     # Return the DataSeries object back to the calling module.
     if len(all_data_series) == 1:
         return all_data_series[0]
-    else:
-        return all_data_series
+    return all_data_series
 #--------------------

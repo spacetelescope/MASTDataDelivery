@@ -184,3 +184,21 @@ Test Case 30::
     python deliver_data.py -m hlsp_kegs -o kegs220163813-c08_lc > unit_test_reffiles/deliver_data/test_case_30.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_30.txt
+
+Test Case 31::
+
+    python deliver_data.py -m states -o XO-1b_transmission_Deming2013 > unit_test_reffiles/deliver_data/test_case_31.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_31.txt
+
+Test Case 32::
+
+    python deliver_data.py -m states -o TRAPPIST-1b_transmission_deWit2016 > unit_test_reffiles/deliver_data/test_case_32.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_32.txt
+
+Test Case 33::
+
+    python deliver_data.py -m k2 -o ktwo203385347-c15_sc > unit_test_reffiles/deliver_data/test_case_33.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_33.txt

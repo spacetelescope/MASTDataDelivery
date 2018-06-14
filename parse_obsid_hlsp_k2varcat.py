@@ -70,9 +70,8 @@ def parse_obsid_hlsp_k2varcat(obsid):
         return parsed_values(k2varcatid=k2varcatid, cadence=cadence,
                              campaign=campaign, errcode=error_code,
                              files=[full_file_name])
-    else:
-        error_code = 3
-        return parsed_values(k2varcatid=k2varcatid, cadence=cadence,
-                             campaign=campaign, errcode=error_code,
-                             files=[full_file_name])
+    error_code = 3
+    return parsed_values(k2varcatid=k2varcatid, cadence=cadence,
+                         campaign=campaign, errcode=error_code,
+                         files=[full_file_name])
     #--------------------
