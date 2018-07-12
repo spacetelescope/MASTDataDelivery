@@ -51,7 +51,8 @@ def parse_obsid_hsla(obsid, targ):
     file_location = (os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "missions" + os.path.sep + "hst" +
                      os.path.sep + "spectral_legacy" + os.path.sep +
-                     'datapile' + os.path.sep + targ + os.path.sep)
+                     'datapile_05-15-2018_COS' + os.path.sep + targ +
+                     os.path.sep)
 
     # Check if directory exists.
     if not os.path.isdir(file_location):
