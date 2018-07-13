@@ -69,7 +69,7 @@ def parse_obsid_hsla(obsid, targ):
             return parsed_values(errcode=error_code, specfiles=spec_files)
         error_code = 2
         return parsed_values(errcode=error_code, specfiles=[''])
-    exposure_level_file = file_location + obsid + "_x1d.fits.gz"
+    exposure_level_file = file_location + obsid + "_x1d.fits"
     if os.path.isfile(exposure_level_file):
         return parsed_values(errcode=error_code,
                              specfiles=[exposure_level_file])
