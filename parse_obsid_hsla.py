@@ -10,6 +10,7 @@
 import collections
 from glob import glob
 import os
+import numpy
 
 #--------------------
 def parse_obsid_hsla(obsid, targ):
@@ -62,9 +63,37 @@ def parse_obsid_hsla(obsid, targ):
     # Look for FITS files.  If given an obsID of "hsla_coadd" then we look
     # for the "coadd" FITS files, otherwise we look for the Obs ID target.
     if obsid.lower().strip() == "hsla_coadd":
-        spec_files = glob(file_location + "*coadd*.fits.gz")
-        # Sort them for reproducibility and unit testing purposes.
-        spec_files.sort()
+        pri_dataseries_patterns = ["FUVM_final_lpALL", "NUVM_final_lp1",
+                                   "G140L_final_lpALL", "G230L_final_lp1"]
+        # This list is the return set of files to be populated below.
+        spec_files = []
+        # Get all the available coadd files.
+        all_spec_files = numpy.asarray(glob(file_location + "*coadd*.fits.gz"))
+        # Make sure the list is sorted (for unit testing purposes).
+        all_spec_files.sort()
+        # Primary DataSeries are always returned, Secondary DataSeries
+        # are returned if size limits allow.
+        where_pri_spec_files = []
+        where_sec_spec_files = []
+        # Look for the primary DataSeries.
+        for iindex, asf in enumerate(all_spec_files):
+            is_pdb = False
+            for pdp in pri_dataseries_patterns:
+                if pdp in os.path.basename(asf):
+                    # As soon as one primary data series string is found, add it
+                    # to the list and don't need to check other primary data
+                    # series strings.
+                    where_pri_spec_files.append(iindex)
+                    is_pdb = True
+                    break
+            if not is_pdb:
+                where_sec_spec_files.append(iindex)
+        # Add Primary Data Series to return object, if any were found.
+        if where_pri_spec_files:
+            spec_files.extend(all_spec_files[where_pri_spec_files])
+        # Add remaining Secondary Data Series to the return object.
+        if where_sec_spec_files:
+            spec_files.extend(all_spec_files[where_sec_spec_files])
         if spec_files:
             return parsed_values(errcode=error_code, specfiles=spec_files)
         error_code = 2
