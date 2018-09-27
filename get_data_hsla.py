@@ -9,6 +9,7 @@
 
 import collections
 import os
+import sys
 from astropy.io import fits
 from data_series import DataSeries
 from parse_obsid_hsla import parse_obsid_hsla
@@ -39,6 +40,10 @@ def get_data_hsla(obsid, targ):
     3 = Could not open one or more FITS file for reading.
     """
 
+    # This defines the maximum (approximate) size in bytes allowed to be
+    # returned as a DataSeries.
+    max_size = 50000000.
+
     # This error code will be used unless there's a problem reading any
     # of the FITS files in the list.
     errcode = 0
@@ -59,6 +64,9 @@ def get_data_hsla(obsid, targ):
 
     # For each file, read in the contents and create a return JSON object.
     if errcode == 0:
+        # This keeps track of the (approximate) total size of the return
+        # object so that it doesn't get too large (in bytes).
+        total_size = 0.0
         for sfile in parsed_files_result.specfiles:
             try:
                 with fits.open(sfile) as hdulist:
@@ -98,14 +106,19 @@ def get_data_hsla(obsid, targ):
                               for x, y in wlfls]],
                             [obsid+'_'+this_seg], [hsla_xunit], [hsla_yunit],
                             errcode, is_ancillary=[0]))
-                        # Append the wl-flerr DataSeries for this segment.
-                        all_data_series.append(DataSeries(
+                        this_dataseries = DataSeries(
                             'hsla', obsid,
                             [[data_point(x=float("{0:.8e}".format(x)),
                                          y=float("{0:.8e}".format(y)))
                               for x, y in wlfls_err]],
                             [obsid+'_'+this_seg+'_ERR'], [hsla_xunit],
-                            [hsla_yunit], errcode, is_ancillary=[1]))
+                            [hsla_yunit], errcode, is_ancillary=[1])
+                        this_dataseries_size = sys.getsizeof(
+                            this_dataseries.plot_series[0])
+                        # Append the wl-flerr DataSeries for this segment.
+                        if total_size + this_dataseries_size <= max_size:
+                            all_data_series.append(this_dataseries)
+                            total_size = total_size + this_dataseries_size
                 else:
                     # Create DataSeries if this is a coadd-level spectrum.
                     wls = [float(x) for x in wls]
@@ -119,23 +132,20 @@ def get_data_hsla(obsid, targ):
                     else:
                         is_anc = [1]
                     # Append the wl-fl DataSeries for this segment.
-                    all_data_series.append(DataSeries(
+                    this_dataseries = DataSeries(
                         'hsla', obsid,
                         [[data_point(x=float("{0:.8e}".format(x)),
                                      y=float("{0:.8e}".format(y)))
                           for x, y in wlfls]],
                         [os.path.basename(sfile).strip(".fits.gz")],
                         [hsla_xunit], [hsla_yunit], errcode,
-                        is_ancillary=is_anc))
+                        is_ancillary=is_anc)
+                    this_dataseries_size = sys.getsizeof(
+                        this_dataseries.plot_series[0])
                     # Append the wl-flerr DataSeries for this segment.
-                    all_data_series.append(DataSeries(
-                        'hsla', obsid,
-                        [[data_point(x=float("{0:.8e}".format(x)),
-                                     y=float("{0:.8e}".format(y)))
-                          for x, y in wlfls_err]],
-                        [os.path.basename(sfile).strip(".fits.gz")+'_ERR'],
-                        [hsla_xunit], [hsla_yunit],
-                        errcode, is_ancillary=[1]))
+                    if total_size + this_dataseries_size <= max_size:
+                        all_data_series.append(this_dataseries)
+                        total_size = total_size + this_dataseries_size
     else:
         # This is where an error DataSeries object would be returned.
         all_data_series.append(DataSeries(
