@@ -4,6 +4,8 @@ See:
 https://github.com/openSAIL/MASTDataDelivery
 """
 
+# Get the version number from the __init__ package file.
+from datadelivery import __version__
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 # To use a consistent encoding
@@ -61,7 +63,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.1.3',  # Required
+    version=__version__,  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -82,11 +84,11 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/openSAIL/MASTDataDelivery',  # Optional
+    url='https://github.com/spacetelescope/MASTDataDelivery',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
-    author='Scott Fleming',  # Optional
+    author='Scott W. Fleming',  # Optional
 
     # This should be a valid email address corresponding to the author listed
     # above.
@@ -101,7 +103,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
@@ -112,8 +114,6 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
@@ -124,7 +124,7 @@ setup(
     # project page. What does your project relate to?
     #
     # Note that this is a string of words separated by whitespace, not a list.
-    keywords='sample setuptools development',  # Optional
+    keywords='astronomy MAST STScI HST Kepler K2',  # Optional
 
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
@@ -144,7 +144,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     #install_requires=['peppercorn'],  # Optional
-    install_requires=['scipy'],
+    install_requires=['astropy', 'numpy'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
@@ -198,7 +198,7 @@ setup(
     # maintainers, and where to support the project financially. The key is
     # what's used to render the link text on PyPI.
     project_urls={  # Optional
-        'Bug Reports': 'https://github.com/openSAIL/MASTDataDelivery/issues',
-        'Source': 'https://github.com/openSAIL/MASTDataDelivery',
+        'Bug Reports': 'https://github.com/spacetelescope/MASTDataDelivery/issues',
+        'Source': 'https://github.com/spacetelescope/MASTDataDelivery',
     },
 )
