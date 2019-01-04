@@ -1,0 +1,3 @@
+From the root directory, run this command to manually run the unit test:
+
+python -m datadelivery._test_deliver_data
