@@ -12,13 +12,18 @@ import os
 import re
 
 #--------------------
-def parse_obsid_hlsp_k2varcat(obsid):
+def parse_obsid_hlsp_k2varcat(obsid, hlsps_dir):
     """
     Given a K2VARCAT observation ID, returns the file to read.
 
     :param obsid: The K2VARCAT observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param hlsps_dir: The path to the directory containing the "hlsps/"
+    folder with the data files.
+
+    :type hlsps_dir: str
 
     :returns: tuple -- An error code and a list of the set of files to read
     (including paths).
@@ -55,8 +60,7 @@ def parse_obsid_hlsp_k2varcat(obsid):
                              campaign=campaign, errcode=error_code, files=[''])
 
     # Use the observation ID to get paths to each file.
-    dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "hlsps" + os.path.sep + "k2varcat" +
+    dir_root = (hlsps_dir + os.path.sep + "k2varcat" +
                 os.path.sep + campaign + os.path.sep)
     star_dir_root = (k2varcatid[0:4] + "00000" + os.path.sep + k2varcatid[4:6] +
                      "000" + os.path.sep)

@@ -8,17 +8,22 @@
 
 import collections
 import numpy
-from data_series import DataSeries
-from parse_obsid_states import parse_obsid_states
+from .data_series import DataSeries
+from .parse_obsid_states import parse_obsid_states
 
 #--------------------
-def get_data_states(obsid):
+def get_data_states(obsid, states_dir):
     """
     Given a STATES observation ID, returns the spectral data.
 
     :param obsid: The STATES observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param states_dir: The path to the STATES directory containing the folder
+    with the data files.  Defaults to "{data_dir}/states/".
+
+    :type states_dir: str
 
     :returns: JSON -- The spectral data for this observation ID.
 
@@ -36,14 +41,14 @@ def get_data_states(obsid):
     errcode = 0
 
     # This defines a data point for a DataSeries object as a namedtuple.
-    data_point = collections.namedtuple('DataPoint', ['x', 'y'])
+    data_point = collections.namedtuple('DataPoint', ['x', 'y', 'xerr', 'yerr'])
 
     # For STATES, this defines the x-axis and y-axis units as a string.
     states_xunit = "microns"
     states_yunit = "(R_p/R_s)^2"
 
     # Parse the obsID string to determine the paths+files to read.
-    parsed_files_result = parse_obsid_states(obsid)
+    parsed_files_result = parse_obsid_states(obsid, states_dir)
     errcode = parsed_files_result.errcode
 
     # For each file, read in the contents and create a return JSON object.
@@ -55,6 +60,8 @@ def get_data_states(obsid):
                                                               comments='#')
                 wls = [float(x) for x in wls]
                 fls = [float(x) for x in rprss]
+                xerr = [float(x) for x in dwls]
+                yerr = [float(x) for x in rprserrs]
             except IOError:
                 errcode = 2
                 return_dataseries = DataSeries(
@@ -64,10 +71,11 @@ def get_data_states(obsid):
                 return_dataseries = DataSeries(
                     'states', obsid, [], [''], [''], [''], errcode)
             else:
-                wlfls = [x for x in zip(wls, fls)]
+                wlfls = [x for x in zip(wls, fls, xerr, yerr)]
                 return_dataseries = DataSeries(
                     'states', obsid,
-                    [[data_point(x=x, y=y) for x, y in wlfls]],
+                    [[data_point(x=x, y=y, xerr=xerr, yerr=yerr) for
+                      x, y, xerr, yerr in wlfls]],
                     ['STATES_' + obsid],
                     [states_xunit], [states_yunit], errcode)
     else:

@@ -9,17 +9,22 @@
 import collections
 import re
 from astropy.io import fits
-from data_series import DataSeries
-from parse_obsid_hlsp_k2varcat import parse_obsid_hlsp_k2varcat
+from .data_series import DataSeries
+from .parse_obsid_hlsp_k2varcat import parse_obsid_hlsp_k2varcat
 
 #--------------------
-def get_data_hlsp_k2varcat(obsid):
+def get_data_hlsp_k2varcat(obsid, hlsps_dir):
     """
     Given a K2VARCAT observation ID, returns the lightcurve data.
 
     :param obsid: The K2VARCAT observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param hlsps_dir: The path to the directory containing the "hlsps/"
+    folder with the data files.
+
+    :type hlsps_dir: str
 
     :returns: JSON -- The lightcurve data for this observation ID.
 
@@ -44,7 +49,7 @@ def get_data_hlsp_k2varcat(obsid):
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    parsed_file_result = parse_obsid_hlsp_k2varcat(obsid)
+    parsed_file_result = parse_obsid_hlsp_k2varcat(obsid, hlsps_dir)
 
     if parsed_file_result.errcode == 0:
         # For each file, read in the contents and create a return JSON object.

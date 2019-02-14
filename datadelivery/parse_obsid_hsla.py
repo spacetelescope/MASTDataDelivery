@@ -13,7 +13,7 @@ import os
 import numpy
 
 #--------------------
-def parse_obsid_hsla(obsid, targ):
+def parse_obsid_hsla(obsid, targ, missions_dir):
     """
     Given an HSLA grism observation ID, return the FITS file to read.  If a
     coadd-level spectrum, must also supply a target name.
@@ -27,6 +27,11 @@ def parse_obsid_hsla(obsid, targ):
     :param targ: The target name, required if a coadd-level spectrum.
 
     :type targ: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: tuple -- An error code and a file to read, including the path.
 
@@ -49,8 +54,7 @@ def parse_obsid_hsla(obsid, targ):
     # NGC-5548
 
     # Generate the full path and name of the file to read.
-    file_location = (os.path.pardir + os.path.sep + os.path.pardir +
-                     os.path.sep + "missions" + os.path.sep + "hst" +
+    file_location = (missions_dir + os.path.sep + "hst" +
                      os.path.sep + "spectral_legacy" + os.path.sep +
                      'datapile_05-15-2018_COS' + os.path.sep + targ +
                      os.path.sep)

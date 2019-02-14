@@ -70,13 +70,18 @@ QUARTER_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 #--------------------
 
 #--------------------
-def parse_obsid_kepler(obsid):
+def parse_obsid_kepler(obsid, missions_dir):
     """
     Given a Kepler observation ID, returns the set of files to read.
 
     :param obsid: The Kepler observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: tuple -- An error code and a list of the set of files to read
     (including paths).
@@ -114,7 +119,7 @@ def parse_obsid_kepler(obsid):
                              files=[''], quarters=[''])
 
     # Make sure the cadence type is either 'lc' or 'sc'.
-    if cadence != 'sc' and cadence != 'lc':
+    if cadence not in ('sc', 'lc'):
         error_code = 3
         return parsed_values(kepid=kepid, cadence=cadence, errcode=error_code,
                              files=[''], quarters=[''])
@@ -128,8 +133,7 @@ def parse_obsid_kepler(obsid):
     # Use the Q code to get paths to each file.
     all_files = []
     all_quarters = []
-    dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "missions" + os.path.sep + "kepler" + os.path.sep +
+    dir_root = (missions_dir + os.path.sep + "kepler" + os.path.sep +
                 "lightcurves" + os.path.sep)
     star_dir_root = kepid[0:4] + os.path.sep + kepid + os.path.sep
 

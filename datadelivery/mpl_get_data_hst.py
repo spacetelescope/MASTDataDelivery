@@ -9,8 +9,8 @@
 
 import collections
 from operator import itemgetter
-from data_series import DataSeries
 import requests
+from .data_series import DataSeries
 
 #--------------------
 def mpl_get_data_hst(obsid):

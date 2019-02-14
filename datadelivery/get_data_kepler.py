@@ -7,17 +7,22 @@
 """
 
 from astropy.io import fits
-from data_series import DataSeries
-from parse_obsid_kepler import parse_obsid_kepler
+from .data_series import DataSeries
+from .parse_obsid_kepler import parse_obsid_kepler
 
 #--------------------
-def get_data_kepler(obsid):
+def get_data_kepler(obsid, missions_dir):
     """
     Given a Kepler observation ID, returns the lightcurve data.
 
     :param obsid: The Kepler observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: JSON -- The lightcurve data for this observation ID.
 
@@ -39,7 +44,7 @@ def get_data_kepler(obsid):
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    parsed_files_result = parse_obsid_kepler(obsid)
+    parsed_files_result = parse_obsid_kepler(obsid, missions_dir)
 
     if parsed_files_result.errcode == 0:
         # For each file, read in the contents and create a return JSON object.

@@ -11,7 +11,7 @@ import collections
 import os
 
 #--------------------
-def parse_obsid_galex(obsid, url):
+def parse_obsid_galex(obsid, url, missions_dir):
     """
     Given an GALEX preview URL, return the FITS file to read.
 
@@ -22,6 +22,11 @@ def parse_obsid_galex(obsid, url):
     :param url: The URL for the preview jpg file.
 
     :type url: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: tuple -- An error code and a file to read, including the path.
 
@@ -45,8 +50,7 @@ def parse_obsid_galex(obsid, url):
         return parsed_values(errcode=error_code, specfiles=[''])
 
     # Generate the full path and name of the file to read.
-    file_location = (os.path.pardir + os.path.sep + os.path.pardir +
-                     os.path.sep + "missions" + os.path.sep + "galex" +
+    file_location = (missions_dir + os.path.sep + "galex" +
                      os.path.sep +
                      os.path.sep.join(url.split(os.path.sep)[2:-3]) +
                      os.path.sep + 'SSAP' + os.path.sep)

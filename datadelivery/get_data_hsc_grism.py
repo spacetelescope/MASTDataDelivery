@@ -9,17 +9,22 @@
 
 import collections
 from astropy.io import fits
-from data_series import DataSeries
-from parse_obsid_hsc_grism import parse_obsid_hsc_grism
+from .data_series import DataSeries
+from .parse_obsid_hsc_grism import parse_obsid_hsc_grism
 
 #--------------------
-def get_data_hsc_grism(obsid):
+def get_data_hsc_grism(obsid, missions_dir):
     """
     Given an HLA grism observation ID, returns the spectral data.
 
     :param obsid: The HLA grism observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: JSON -- The spectral data for this observation ID.
 
@@ -46,7 +51,7 @@ def get_data_hsc_grism(obsid):
     hsc_grism_yunit = "ergs/cm^2/s/Angstrom"
 
     # Parse the obsID string to determine the paths+files to read.
-    parsed_files_result = parse_obsid_hsc_grism(obsid)
+    parsed_files_result = parse_obsid_hsc_grism(obsid, missions_dir)
     errcode = parsed_files_result.errcode
 
     # For each file, read in the contents and create a return JSON object.

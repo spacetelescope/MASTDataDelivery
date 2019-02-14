@@ -12,13 +12,18 @@ import os
 import re
 
 #--------------------
-def parse_obsid_hlsp_kegs(obsid):
+def parse_obsid_hlsp_kegs(obsid, hlsps_dir):
     """
     Given a KEGS observation ID, returns the file to read.
 
     :param obsid: The KEGS observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param hlsps_dir: The path to the directory containing the "hlsps/"
+    folder with the data files.
+
+    :type hlsps_dir: str
 
     :returns: tuple -- An error code and a list of the set of files to read
     (including paths).
@@ -55,8 +60,7 @@ def parse_obsid_hlsp_kegs(obsid):
                              campaign=campaign, errcode=error_code, files=[''])
 
     # Use the observation ID to get paths to each file.
-    dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "hlsps" + os.path.sep + "kegs" + os.path.sep + "v2" +
+    dir_root = (hlsps_dir + os.path.sep + "kegs" + os.path.sep + "v2" +
                 os.path.sep + campaign + os.path.sep)
     star_dir_root = (kegsid[0:4] + "00000" + os.path.sep + kegsid[4:] +
                      os.path.sep)

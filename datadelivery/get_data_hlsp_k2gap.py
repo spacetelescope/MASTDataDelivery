@@ -7,18 +7,23 @@
 """
 
 import collections
-from data_series import DataSeries
 import numpy
-from parse_obsid_hlsp_k2gap import parse_obsid_hlsp_k2gap
+from .data_series import DataSeries
+from .parse_obsid_hlsp_k2gap import parse_obsid_hlsp_k2gap
 
 #--------------------
-def get_data_hlsp_k2gap(obsid):
+def get_data_hlsp_k2gap(obsid, hlsps_dir):
     """
     Given a K2GAP observation ID, returns the lightcurve data.
 
     :param obsid: The K2GAP observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param hlsps_dir: The path to the directory containing the "hlsps/"
+    folder with the data files.
+
+    :type hlsps_dir: str
 
     :returns: JSON -- The lightcurve data for this observation ID.
 
@@ -39,7 +44,7 @@ def get_data_hlsp_k2gap(obsid):
 
     # Parse the obsID string to determine the paths+files to read.  Note:
     # this step will assign some of the error codes returned to the top level.
-    parsed_file_result = parse_obsid_hlsp_k2gap(obsid)
+    parsed_file_result = parse_obsid_hlsp_k2gap(obsid, hlsps_dir)
 
     if parsed_file_result.errcode == 0:
         # For each file, read in the contents and create a return JSON object.

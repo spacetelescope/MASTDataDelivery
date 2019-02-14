@@ -11,13 +11,18 @@ import collections
 import os
 
 #--------------------
-def parse_obsid_states(obsid):
+def parse_obsid_states(obsid, states_dir):
     """
     Given an STATES observation ID, return the spectral file to read.
 
     :param obsid: The STATES observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param states_dir: The path to the STATES directory containing the folder
+    with the data files.  Defaults to "{data_dir}/states/".
+
+    :type states_dir: str
 
     :returns: tuple -- An error code and a file to read, including the path.
 
@@ -34,9 +39,12 @@ def parse_obsid_states(obsid):
     error_code = 0
 
     # Generate the full path and name of the file to read.
-    file_location = (os.path.pardir + os.path.sep + os.path.pardir +
-                     os.path.sep + "states" + os.path.sep +
-                     "transmission_spectra" + os.path.sep)
+    if "_transmission_" in obsid:
+        file_location = (states_dir + os.path.sep +
+                         "transmission_spectra" + os.path.sep)
+    else:
+        file_location = (states_dir + os.path.sep +
+                         "emission_spectra" + os.path.sep)
 
     # The name of the file is equal to the STATES observation ID.
     spec_file = file_location + obsid + ".txt"

@@ -12,13 +12,18 @@ import os
 import re
 
 #--------------------
-def parse_obsid_k2(obsid):
+def parse_obsid_k2(obsid, missions_dir):
     """
     Given a K2 observation ID, returns the file to read.
 
     :param obsid: The K2 observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: tuple -- An error code and a list of the set of files to read
     (including paths).
@@ -58,14 +63,13 @@ def parse_obsid_k2(obsid):
     campaign_subdir = 'c'+'{0:2d}'.format(int(campaign[1:])).strip()
 
     # Make sure the cadence type is 'lc' or 'sc'.
-    if cadence != 'lc' and cadence != 'sc':
+    if cadence not in ('lc', 'sc'):
         error_code = 2
         return parsed_values(k2id=k2id, cadence=cadence,
                              campaign=campaign, errcode=error_code, files=[''])
 
     # Use the observation ID to get paths to each file.
-    dir_root = (os.path.pardir + os.path.sep + os.path.pardir + os.path.sep +
-                "missions" + os.path.sep + "k2" + os.path.sep + "lightcurves" +
+    dir_root = (missions_dir + os.path.sep + "k2" + os.path.sep + "lightcurves" +
                 os.path.sep + campaign_subdir + os.path.sep)
     star_dir_root = (k2id[0:4] + "00000" + os.path.sep + k2id[4:6] + "000" +
                      os.path.sep)

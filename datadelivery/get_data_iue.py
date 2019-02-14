@@ -10,10 +10,10 @@ import collections
 import math
 from operator import itemgetter
 from astropy.io import fits
-from data_series import DataSeries
 import numpy
-from parse_obsid_iue import parse_obsid_iue
 from scipy.interpolate import interp1d
+from .data_series import DataSeries
+from .parse_obsid_iue import parse_obsid_iue
 
 #--------------------
 def calculate_cut_wl(camera, order, aperture):
@@ -325,7 +325,7 @@ def resample_spectrum(combined_spectrum, camera, showplot=False):
 #--------------------
 
 #--------------------
-def get_data_iue(obsid, filt):
+def get_data_iue(obsid, filt, missions_dir):
     """
     Given an IUE observation ID, returns the spectral data.  Note that, in some
     cases, an observation ID has both a low and high dispersion spectrum
@@ -340,6 +340,11 @@ def get_data_iue(obsid, filt):
     "LOW_DISP" or "HIGH_DISP".
 
     :type filt: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: JSON -- The spectral data for this observation ID.
 
@@ -369,7 +374,7 @@ def get_data_iue(obsid, filt):
     if filt == ' ':
         filt = "UNKNOWN"
     if filt.upper() in ["LOW_DISP", "HIGH_DISP"] or filt == "UNKNOWN":
-        parsed_files_result = parse_obsid_iue(obsid, filt.upper())
+        parsed_files_result = parse_obsid_iue(obsid, filt.upper(), missions_dir)
         errcode = parsed_files_result.errcode
     else:
         errcode = 4

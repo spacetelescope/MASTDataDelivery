@@ -11,13 +11,18 @@ import collections
 import os
 
 #--------------------
-def parse_obsid_hsc_grism(obsid):
+def parse_obsid_hsc_grism(obsid, missions_dir):
     """
     Given an HSC grism observation ID, return the FITS file to read.
 
     :param obsid: The HSC grism observation ID to retrieve the data from.
 
     :type obsid: str
+
+    :param missions_dir: The path to the directory containing the "missions/"
+    folder with the data files.
+
+    :type missions_dir: str
 
     :returns: tuple -- An error code and a file to read, including the path.
 
@@ -59,8 +64,7 @@ def parse_obsid_hsc_grism(obsid):
     obsid_subdirpart = obsid_splits[2][0:4] + os.path.sep + obsid_splits[2][0:6]
 
     # Generate the full path and name of the file to read.
-    file_location = (os.path.pardir + os.path.sep + os.path.pardir +
-                     os.path.sep + "missions" + os.path.sep + "hst" +
+    file_location = (missions_dir + os.path.sep + "hst" +
                      os.path.sep + "hla" + os.path.sep + 'data24' +
                      os.path.sep + obsid_instpart + os.path.sep +
                      obsid_subdirpart + os.path.sep)
