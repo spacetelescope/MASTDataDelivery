@@ -53,8 +53,8 @@ def parse_obsid_tess(obsid, missions_dir):
                              errcode=error_code, files=[''])
 
     # Use the observation ID to get paths to each file.
-    dir_root = (missions_dir + os.path.sep + "tess" + os.path.sep + "public" +
-                os.path.sep + 'tid' + os.path.sep + sector + os.path.sep)
+    dir_root = (missions_dir + os.path.sep + "tess" + os.path.sep + 'tid' +
+                os.path.sep + sector + os.path.sep)
     star_dir_root = (tessid[0:4] + os.path.sep + tessid[4:8] +os.path.sep +
                      tessid[8:12] + os.path.sep + tessid[12:16] + os.path.sep)
 
