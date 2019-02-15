@@ -488,6 +488,32 @@ class TestGetDataKepler(unittest.TestCase):
             self.fail(msg="Reference file not found.  Looking for " + old_file)
         self.assertEqual(old_str, new_str)
 
+    def test_case34(self):
+        """ This tests a TESS light curve file. """
+        new_str = deliver_data(
+            ["tess"], ["tess2018234235059-s0002-0000000002733208-0121-s"],
+            missions_dir="../../missions/")
+        old_file = self.reference_file_path + "test_case_34.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
+    def test_case35(self):
+        """ This tests a TESS target pixel file only case. """
+        new_str = deliver_data(
+            ["tess"], ["tess2018263035959-s0003-0000000114434141-0123-s"],
+            missions_dir="../../missions/")
+        old_file = self.reference_file_path + "test_case_35.txt.gz"
+        if os.path.isfile(old_file):
+            with gzip.open(old_file, 'rt') as oldfile:
+                old_str = oldfile.readlines()[0].strip()
+        else:
+            self.fail(msg="Reference file not found.  Looking for " + old_file)
+        self.assertEqual(old_str, new_str)
+
 #--------------------
 
 if __name__ == "__main__":

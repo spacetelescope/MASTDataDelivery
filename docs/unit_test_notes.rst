@@ -211,3 +211,15 @@ Test Case 33::
     python -m datadelivery.deliver_data -m k2 -o ktwo203385347-c15_sc -x ../../missions > unit_test_reffiles/deliver_data/test_case_33.txt
 
     gzip unit_test_reffiles/deliver_data/test_case_33.txt
+
+Test Case 34::
+
+    python -m datadelivery.deliver_data -m tess -o tess2018234235059-s0002-0000000002733208-0121-s -x ../../missions > unit_test_reffiles/deliver_data/test_case_34.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_34.txt
+
+Test Case 35::
+
+    python -m datadelivery.deliver_data -m tess -o tess2018263035959-s0003-0000000114434141-0123-s -x ../../missions > unit_test_reffiles/deliver_data/test_case_35.txt
+
+    gzip unit_test_reffiles/deliver_data/test_case_35.txt
