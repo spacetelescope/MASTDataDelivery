@@ -72,7 +72,6 @@ def parse_obsid_tess(obsid, missions_dir):
         return parsed_values(tessid=tessid,
                              sector=sector, errcode=error_code,
                              files=[tp_full_file_name])
-    import pdb; pdb.set_trace()
     error_code = 2
     return parsed_values(tessid=tessid,
                          sector=sector, errcode=error_code,
