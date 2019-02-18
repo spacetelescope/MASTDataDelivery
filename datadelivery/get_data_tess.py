@@ -71,9 +71,9 @@ def get_data_tess(obsid, missions_dir):
 
                     # Create the plot label and plot series for the
                     # extracted and detrended fluxes.
-                    this_plot_label = ('TESS - TIC ' +
+                    this_plot_label = ('TESS TIC ' +
                                        parsed_file_result.tessid +
-                                       ' - Sector {0:d}'.format(
+                                       ' Sector {0:d}'.format(
                                            int(parsed_file_result.sector[1:])))
                     all_plot_labels[i*2] = this_plot_label + ' SAP'
                     all_plot_series[i*2] = [x for x in
