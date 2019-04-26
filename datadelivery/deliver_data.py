@@ -40,7 +40,7 @@ from .mpl_get_data_wuppe import mpl_get_data_wuppe
 CACHE_DIR_DEFAULT = (os.path.pardir + os.path.sep +
                      os.path.pardir + os.path.sep + os.path.pardir +
                      os.path.sep + "missions" + os.path.sep + "kepler" +
-                     os.path.sep + "lightcurves" + os.path.sep + "cache" +
+                     os.path.sep + "datadelivery_cache" +
                      os.path.sep)
 DATA_DIR_DEFAULT = os.path.join(os.path.pardir, os.path.pardir, os.path.pardir +
                                 os.path.sep)

@@ -37,7 +37,7 @@ class TestGetDataKepler(unittest.TestCase):
         new_str = deliver_data(
             ["kepler"], ["kplr000757450_sc_Q000000000033333300"],
             filters=["kepler"], missions_dir="../../missions/",
-            cache_dir="../../missions/kepler/lightcurves/cache/")
+            cache_dir="../../missions/kepler/datadelivery_cache/")
         old_file = self.reference_file_path + "test_case_02.txt.gz"
         if os.path.isfile(old_file):
             with gzip.open(old_file, 'rt') as oldfile:
